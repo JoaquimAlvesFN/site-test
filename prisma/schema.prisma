@@ -1,0 +1,196 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./sky.db"
+}
+
+model Package {
+  id          Int      @id @default(autoincrement())
+  title       String
+  price       String
+  description String
+  features    String
+  popular     Boolean  @default(false)
+  recurrent   Boolean  @default(true)
+  discount    String?
+  tag         String?
+  packageType String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model HeroSlide {
+  id         Int      @id @default(autoincrement())
+  title      String
+  subtitle   String
+  price      String
+  cta        String
+  image      String
+  features   String
+  tag        String?
+  speedBadge String?
+  order      Int
+  active     Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Channel {
+  id        Int      @id @default(autoincrement())
+  name      String
+  logo      String
+  category  String
+  order     Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FAQ {
+  id        Int      @id @default(autoincrement())
+  question  String
+  answer    String
+  order     Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id        Int      @id @default(autoincrement())
+  quote     String
+  author    String
+  role      String
+  rating    Int
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Setting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String?
+  cep       String
+  interest  String
+  packageId Int?
+  status    String   @default("pending")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image {
+  id        Int      @id @default(autoincrement())
+  name      String
+  url       String
+  size      Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CompanyInfo {
+  id                Int      @id @default(autoincrement())
+  aboutTitle        String
+  aboutDescription  String
+  aboutDescription2 String?
+  clientsCount      String
+  employeesCount    String
+  channelsCount     String
+  coveragePercent   String
+  heroTitle         String
+  heroSubtitle      String
+  heroImage         String
+  heroImageAlt      String
+  heroImageCaption  String
+  heroImageLocation String
+  updatedAt         DateTime @updatedAt
+}
+
+model CompanyValue {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String
+  order       Int
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model CompanyHistory {
+  id          Int      @id @default(autoincrement())
+  year        String
+  title       String
+  description String
+  order       Int
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model TeamMember {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String
+  description String
+  image       String
+  linkedin    String?
+  twitter     String?
+  order       Int
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model CompanyFacility {
+  id        Int      @id @default(autoincrement())
+  title     String
+  location  String
+  image     String
+  alt       String
+  order     Int
+  active    Boolean  @default(true)
+  updatedAt DateTime @updatedAt
+}
+
+model QuickFeature {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String
+  order       Int
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model WhyChooseFeature {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  icon        String
+  order       Int
+  active      Boolean  @default(true)
+  updatedAt   DateTime @updatedAt
+}
+
+model InternetSection {
+  id          Int      @id @default(autoincrement())
+  title       String
+  subtitle    String
+  description String
+  image       String
+  price       String
+  speedBadge  String
+  cta         String
+  ctaLink     String
+  updatedAt   DateTime @updatedAt
+}
