@@ -1,6 +1,6 @@
-import {PrismaClient} from '@prisma/client';
+// import {PrismaClient} from '@prisma/client';
 
-export const db = new PrismaClient();
+// export const db = new PrismaClient();
 
 // Mock database for demo purposes
 // In a real application, you would use a real database
@@ -759,7 +759,7 @@ export const businessSection = {
 }
 
 // Criar uma instância do banco de dados mock
-// export const db = new MockDatabase()
+export const db = new MockDatabase()
 
 
 export const getDb = async () => {
