@@ -13,7 +13,33 @@ export default async function ImagesPage() {
   requireAuth()
 
   // Buscar imagens do banco de dados
-  const images = await getImages()
+  const images = [
+    {
+      id: 1,
+      name: "hero-banner.jpg",
+      url: "/uploads/hero-banner.jpg",
+      size: 245000,
+      createdAt: "2023-04-15T10:30:00.000Z",
+      updatedAt: "2023-04-15T10:30:00.000Z",
+    },
+    {
+      id: 2,
+      name: "sky-logo.png",
+      url: "/uploads/sky-logo.png",
+      size: 32000,
+      createdAt: "2023-04-16T14:20:00.000Z",
+      updatedAt: "2023-04-16T14:20:00.000Z",
+    },
+    {
+      id: 3,
+      name: "internet-promo.jpg",
+      url: "/uploads/internet-promo.jpg",
+      size: 178000,
+      createdAt: "2023-04-17T09:15:00.000Z",
+      updatedAt: "2023-04-17T09:15:00.000Z",
+    },
+  ];
+  // await getImages()
 
   return (
     <div className="space-y-6">

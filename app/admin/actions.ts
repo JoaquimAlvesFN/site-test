@@ -349,7 +349,8 @@ export async function getImages() {
 
     // Tentar obter as imagens do banco de dados
     try {
-      const dbImages = await db.select().from(images).orderBy(images.createdAt)
+      const dbImages = await db.image.findMany();
+      // select().from(images).orderBy(images.createdAt)
 
       // Se o banco de dados retornar dados válidos, use-os
       if (Array.isArray(dbImages) && dbImages.length > 0) {
