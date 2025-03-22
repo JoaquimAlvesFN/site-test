@@ -101,6 +101,10 @@ export default async function Home() {
           <QuickFeatures />
         </Suspense>
 
+        <Suspense fallback={<div>Carregando...</div>}>
+          <BusinessSection />
+        </Suspense>
+
         <section id="tv-packages" className="py-16">
           <div className="container">
             <div className="text-center mb-12">
