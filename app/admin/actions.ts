@@ -186,7 +186,8 @@ export async function logoutAction() {
 
 export async function deleteHeroSlide(id: number) {
   try {
-    await db.delete(heroSlides).where(eq(heroSlides.id, id))
+    await db.heroSlide.delete({where: {id}})
+    // delete(heroSlides).where(eq(heroSlides.id, id))
     revalidatePath("/admin/slides")
     return { success: true }
   } catch (error) {
@@ -197,7 +198,12 @@ export async function deleteHeroSlide(id: number) {
 
 export async function createHeroSlide(data: any) {
   try {
-    await db.insert(heroSlides).values(data)
+    const dataMapper = {  
+      ...data,
+      order: parseInt(data.order),
+    }
+    await db.heroSlide.create({data: dataMapper})
+    // insert(heroSlides).values(data)
     revalidatePath("/admin/slides")
     return { success: true }
   } catch (error) {
@@ -208,7 +214,12 @@ export async function createHeroSlide(data: any) {
 
 export async function updateHeroSlide(id: number, data: any) {
   try {
-    await db.update(heroSlides).set(data).where(eq(heroSlides.id, id))
+    const dataMapper = {  
+      ...data,
+      order: parseInt(data.order),
+    }
+    await db.heroSlide.update({data: dataMapper, where: {id}})
+    // .update(heroSlides).set(data).where(eq(heroSlides.id, id))
     revalidatePath("/admin/slides")
     return { success: true }
   } catch (error) {
@@ -342,7 +353,8 @@ export async function getPackage(id: number) {
 
 export async function getHeroSlide(id: number) {
   try {
-    const result = await db.select().from(heroSlides).where(eq(heroSlides.id, id))
+    const result = await db.heroSlide.findMany({where: {id}})
+    // .select().from(heroSlides).where(eq(heroSlides.id, id))
 
     // Verificar se o resultado existe e tem pelo menos um item
     if (!result || result.length === 0) {
@@ -350,7 +362,12 @@ export async function getHeroSlide(id: number) {
       return null
     }
 
-    return result[0]
+    const resultMapper = {
+      ...result[0],
+      features: result[0].features.split(",")
+    }
+
+    return resultMapper
   } catch (error) {
     console.error("Error fetching hero slide:", error)
     return null
@@ -1810,7 +1827,8 @@ export async function getActivePackages() {
 // Função para obter os slides ativos do carrossel
 export async function getActiveHeroSlides() {
   try {
-    const result = await db.select().from(heroSlides).orderBy(heroSlides.order)
+    const result = await db.heroSlide.findMany({orderBy: {order: 'asc'}})
+    // .select().from(heroSlides).orderBy(heroSlides.order)
 
     if (!result || result.length === 0) {
       // Retornar dados padrão se não houver registros

@@ -98,15 +98,15 @@ export default async function SlideEditPage({ params }: SlideEditPageProps) {
   let slideData = await getHeroSlide(id)
 
   // Se não encontrar no banco de dados, procurar nos dados estáticos
-  if (!slideData) {
-    slideData = staticSlides.find((slide) => slide.id === id)
+  // if (!slideData) {
+  //   slideData = staticSlides.find((slide) => slide.id === id)
 
-    // Se ainda não encontrar, retornar 404
-    if (!slideData) {
-      console.error(`Slide with ID ${id} not found`)
-      notFound()
-    }
-  }
+  //   // Se ainda não encontrar, retornar 404
+  //   if (!slideData) {
+  //     console.error(`Slide with ID ${id} not found`)
+  //     notFound()
+  //   }
+  // }
 
   return (
     <div className="space-y-6">

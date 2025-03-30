@@ -73,7 +73,7 @@ export function SlideForm({ slideData }: SlideFormProps) {
 
       const slidePayload = {
         ...formData,
-        features: filteredFeatures,
+        features: filteredFeatures.join(','),
       }
 
       if (slideData?.id) {
