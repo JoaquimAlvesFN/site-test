@@ -138,8 +138,8 @@ export default async function Home() {
                         features={pkg.features.split(',') as string[]}
                         popular={pkg.popular}
                         recurrent={pkg.recurrent}
-                        discount={pkg.discount}
-                        tag={pkg.tag}
+                        discount={pkg.discount || undefined}
+                        tag={pkg.tag || undefined}
                         packageId={pkg.id}
                       />
                     ))
@@ -162,8 +162,8 @@ export default async function Home() {
                         features={pkg.features.split(',') as string[]}
                         popular={pkg.popular}
                         recurrent={pkg.recurrent}
-                        discount={pkg.discount}
-                        tag={pkg.tag}
+                        discount={pkg.discount || undefined}
+                        tag={pkg.tag || undefined}
                         packageId={pkg.id}
                       />
                     ))

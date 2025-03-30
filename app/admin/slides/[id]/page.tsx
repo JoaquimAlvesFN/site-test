@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react"
 import { SlideForm } from "@/components/admin/slide-form"
 import { notFound } from "next/navigation"
 import { getHeroSlide } from "@/app/admin/actions"
+import { HeroSlide } from "@/lib/db"
 
 interface SlideEditPageProps {
   params: {
@@ -118,7 +119,7 @@ export default async function SlideEditPage({ params }: SlideEditPageProps) {
         </Button>
         <div>
           <h1 className="text-3xl font-bold">Editar Slide</h1>
-          <p className="text-muted-foreground">Edite as informações do slide {slideData.title || `#${id}`}</p>
+          <p className="text-muted-foreground">Edite as informações do slide {slideData?.title || `#${id}`}</p>
         </div>
       </div>
 
@@ -127,7 +128,7 @@ export default async function SlideEditPage({ params }: SlideEditPageProps) {
           <CardTitle>Informações do Slide</CardTitle>
         </CardHeader>
         <CardContent>
-          <SlideForm slideData={slideData} />
+          <SlideForm slideData={slideData as unknown as HeroSlide} />
         </CardContent>
       </Card>
     </div>
