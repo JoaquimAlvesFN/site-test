@@ -40,7 +40,7 @@ export async function getAllSettings() {
 
 export async function getAllChannel() {
   try {
-    const results = await db.channel
+    const results = await db.channel.findMany()
     return results
   } catch (error) {
     console.error("Error fetching settings:", error)
@@ -252,7 +252,8 @@ export async function updateTestimonial(id: number, data: any) {
 
 export async function getChannel(id: number) {
   try {
-    const result = await db.select().from(channels).where(eq(channels.id, id))
+    const result = await db.channel.findMany({where: {id}})
+    // .select().from(channels).where(eq(channels.id, id))
 
     // Verificar se o resultado existe e tem pelo menos um item
     if (!result || result.length === 0) {

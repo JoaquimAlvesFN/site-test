@@ -5,61 +5,64 @@ import Link from "next/link"
 import { Plus, Edit } from "lucide-react"
 import { ChannelDeleteButton } from "@/components/admin/channel-delete-button"
 import Image from "next/image"
+import { getAllChannel } from "../actions"
 
 export default async function ChannelsPage() {
   requireAuth()
 
   // Para o demo, vamos usar dados estáticos
-  const channels = [
-    {
-      id: 1,
-      name: "HBO",
-      logo: "/placeholder.svg?height=60&width=60",
-      category: "Filmes",
-      order: 1,
-      active: true,
-    },
-    {
-      id: 2,
-      name: "ESPN",
-      logo: "/placeholder.svg?height=60&width=60",
-      category: "Esportes",
-      order: 2,
-      active: true,
-    },
-    {
-      id: 3,
-      name: "Discovery",
-      logo: "/placeholder.svg?height=60&width=60",
-      category: "Documentários",
-      order: 3,
-      active: true,
-    },
-    {
-      id: 4,
-      name: "Telecine",
-      logo: "/placeholder.svg?height=60&width=60",
-      category: "Filmes",
-      order: 4,
-      active: true,
-    },
-    {
-      id: 5,
-      name: "Globo",
-      logo: "/placeholder.svg?height=60&width=60",
-      category: "Abertos",
-      order: 5,
-      active: true,
-    },
-    {
-      id: 6,
-      name: "SporTV",
-      logo: "/placeholder.svg?height=60&width=60",
-      category: "Esportes",
-      order: 6,
-      active: false,
-    },
-  ]
+  // const channels = [
+  //   {
+  //     id: 1,
+  //     name: "HBO",
+  //     logo: "/placeholder.svg?height=60&width=60",
+  //     category: "Filmes",
+  //     order: 1,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "ESPN",
+  //     logo: "/placeholder.svg?height=60&width=60",
+  //     category: "Esportes",
+  //     order: 2,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Discovery",
+  //     logo: "/placeholder.svg?height=60&width=60",
+  //     category: "Documentários",
+  //     order: 3,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Telecine",
+  //     logo: "/placeholder.svg?height=60&width=60",
+  //     category: "Filmes",
+  //     order: 4,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Globo",
+  //     logo: "/placeholder.svg?height=60&width=60",
+  //     category: "Abertos",
+  //     order: 5,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "SporTV",
+  //     logo: "/placeholder.svg?height=60&width=60",
+  //     category: "Esportes",
+  //     order: 6,
+  //     active: false,
+  //   },
+  // ]
+
+  const channels = await getAllChannel()
 
   // Agrupar canais por categoria
   const channelsByCategory: Record<string, typeof channels> = {}

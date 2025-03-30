@@ -213,7 +213,7 @@ export default async function Home() {
             {/* </Suspense> */}
 
             <div className="mt-12 text-center">
-              <ContactModal
+              {/* <ContactModal
                 trigger={
                   <Button variant="outline" size="lg">
                     <span className="flex items-center gap-2">
@@ -224,7 +224,7 @@ export default async function Home() {
                 }
                 title="Lista Completa de Canais"
                 description="Preencha seus dados para receber a lista completa de canais. Nossa equipe entrará em contato em breve."
-              />
+              /> */}
             </div>
           </div>
         </section>
@@ -233,7 +233,7 @@ export default async function Home() {
           <WhyChooseSection />
         </Suspense>
 
-        <section className="py-16 bg-[#00205B] text-white">
+        {/* <section className="py-16 bg-[#00205B] text-white">
           <div className="container">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
               <div>
@@ -259,9 +259,9 @@ export default async function Home() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
-        <section className="py-16">
+        <section className="py-16 bg-slate-50">
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">O Que Nossos Clientes Dizem</h2>
