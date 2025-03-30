@@ -83,7 +83,12 @@ export async function updateChannel(id: number, data: any) {
 
 export async function deleteFaq(id: number) {
   try {
-    await db.delete(faqs).where(eq(faqs.id, id))
+    await db.fAQ.delete({
+      where: {
+        id: id
+      }
+    })
+    // .delete(faqs).where(eq(faqs.id, id))
     revalidatePath("/admin/faqs")
     return { success: true }
   } catch (error) {
@@ -94,7 +99,10 @@ export async function deleteFaq(id: number) {
 
 export async function createFaq(data: any) {
   try {
-    await db.fAQ.create(data)
+    await db.fAQ.create({
+      data
+    })
+    // db.fAQ.create(data)
     revalidatePath("/admin/faqs")
     return { success: true }
   } catch (error) {
@@ -105,7 +113,13 @@ export async function createFaq(data: any) {
 
 export async function updateFaq(id: number, data: any) {
   try {
-    await db.update(faqs).set(data).where(eq(faqs.id, id))
+    await db.fAQ.update({
+      where: {
+        id: id
+      },
+      data
+    })
+    // update(faqs).set(data).where(eq(faqs.id, id))
     revalidatePath("/admin/faqs")
     return { success: true }
   } catch (error) {
@@ -248,9 +262,28 @@ export async function getChannel(id: number) {
   }
 }
 
+export async function getAllFaq() { 
+  try {
+    const result = await db.fAQ.findMany()
+    if (!result || result.length === 0) {
+      console.log(`No FAQs found`)
+      return null
+    }
+    return result
+  } catch (error) {
+    console.error("Error fetching all faqs:", error)
+    return []
+  }
+}
+
 export async function getFaq(id: number) {
   try {
-    const result = await db.select().from(faqs).where(eq(faqs.id, id))
+    const result = await db.fAQ.findMany({
+      where: {
+        id: id
+      }
+    })
+    // .select().from(faqs).where(eq(faqs.id, id))
 
     // Verificar se o resultado existe e tem pelo menos um item
     if (!result || result.length === 0) {

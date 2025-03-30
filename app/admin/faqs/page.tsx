@@ -4,53 +4,56 @@ import { requireAuth } from "@/lib/auth"
 import Link from "next/link"
 import { Plus, Edit, ChevronDown, ChevronUp } from "lucide-react"
 import { FaqDeleteButton } from "@/components/admin/faq-delete-button"
+import { getAllFaq } from "../actions"
 
 export default async function FaqsPage() {
   requireAuth()
 
+  const faqs = await getAllFaq()
+
   // Para o demo, vamos usar dados estáticos
-  const faqs = [
-    {
-      id: 1,
-      question: "Qual a diferença entre SKY pós-pago e pré-pago?",
-      answer:
-        "O SKY pós-pago funciona com mensalidade fixa, cobrada mensalmente via fatura. Já o SKY pré-pago funciona com recargas, onde você paga antecipadamente pelo período que deseja utilizar o serviço, sem mensalidade ou fidelidade.",
-      order: 1,
-      active: true,
-    },
-    {
-      id: 2,
-      question: "Quanto tempo leva para instalar a SKY após a contratação?",
-      answer:
-        "A instalação da SKY geralmente é realizada em até 48 horas úteis após a aprovação do cadastro, dependendo da disponibilidade na sua região.",
-      order: 2,
-      active: true,
-    },
-    {
-      id: 3,
-      question: "Posso assistir SKY em mais de uma TV?",
-      answer:
-        "Sim, é possível assistir SKY em mais de uma TV. Dependendo do pacote escolhido, você pode ter pontos adicionais inclusos ou contratar separadamente.",
-      order: 3,
-      active: true,
-    },
-    {
-      id: 4,
-      question: "O que é o SKY Play?",
-      answer:
-        "O SKY Play é o serviço de streaming da SKY que permite assistir a diversos conteúdos pelo celular, tablet ou computador. Está incluso em todos os pacotes pós-pagos sem custo adicional.",
-      order: 4,
-      active: false,
-    },
-    {
-      id: 5,
-      question: "A SKY tem fidelidade?",
-      answer:
-        "Os planos pós-pagos geralmente possuem fidelidade de 12 meses. Já os planos pré-pagos não possuem fidelidade, permitindo recarregar apenas quando desejar.",
-      order: 5,
-      active: true,
-    },
-  ]
+  // const faqs = [
+  //   {
+  //     id: 1,
+  //     question: "Qual a diferença entre SKY pós-pago e pré-pago?",
+  //     answer:
+  //       "O SKY pós-pago funciona com mensalidade fixa, cobrada mensalmente via fatura. Já o SKY pré-pago funciona com recargas, onde você paga antecipadamente pelo período que deseja utilizar o serviço, sem mensalidade ou fidelidade.",
+  //     order: 1,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     question: "Quanto tempo leva para instalar a SKY após a contratação?",
+  //     answer:
+  //       "A instalação da SKY geralmente é realizada em até 48 horas úteis após a aprovação do cadastro, dependendo da disponibilidade na sua região.",
+  //     order: 2,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     question: "Posso assistir SKY em mais de uma TV?",
+  //     answer:
+  //       "Sim, é possível assistir SKY em mais de uma TV. Dependendo do pacote escolhido, você pode ter pontos adicionais inclusos ou contratar separadamente.",
+  //     order: 3,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     question: "O que é o SKY Play?",
+  //     answer:
+  //       "O SKY Play é o serviço de streaming da SKY que permite assistir a diversos conteúdos pelo celular, tablet ou computador. Está incluso em todos os pacotes pós-pagos sem custo adicional.",
+  //     order: 4,
+  //     active: false,
+  //   },
+  //   {
+  //     id: 5,
+  //     question: "A SKY tem fidelidade?",
+  //     answer:
+  //       "Os planos pós-pagos geralmente possuem fidelidade de 12 meses. Já os planos pré-pagos não possuem fidelidade, permitindo recarregar apenas quando desejar.",
+  //     order: 5,
+  //     active: true,
+  //   },
+  // ]
 
   return (
     <div className="space-y-6">
@@ -73,7 +76,7 @@ export default async function FaqsPage() {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {faqs.map((faq) => (
+            {faqs?.map((faq) => (
               <div key={faq.id} className={`border rounded-lg p-4 ${!faq.active ? "opacity-60 bg-slate-50" : ""}`}>
                 <div className="flex justify-between items-start gap-4">
                   <div className="flex-1">
@@ -99,7 +102,7 @@ export default async function FaqsPage() {
                     <FaqDeleteButton id={faq.id} />
                   </div>
                 </div>
-                <div className="flex justify-between mt-4">
+                {/* <div className="flex justify-between mt-4">
                   <Button variant="ghost" size="sm" className="h-8 text-slate-500">
                     <ChevronUp className="h-4 w-4 mr-1" />
                     Mover para cima
@@ -108,7 +111,7 @@ export default async function FaqsPage() {
                     <ChevronDown className="h-4 w-4 mr-1" />
                     Mover para baixo
                   </Button>
-                </div>
+                </div> */}
               </div>
             ))}
           </div>

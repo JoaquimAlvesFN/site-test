@@ -52,6 +52,7 @@ export function FaqForm({ faqData }: FaqFormProps) {
     try {
       const faqPayload = {
         ...formData,
+        order: parseInt(formData.order.toString()),
       }
 
       if (faqData?.id) {
