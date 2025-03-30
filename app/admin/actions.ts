@@ -219,7 +219,8 @@ export async function updateHeroSlide(id: number, data: any) {
 
 export async function deleteTestimonial(id: number) {
   try {
-    await db.delete(testimonials).where(eq(testimonials.id, id))
+    await db.testimonial.delete({where: {id}})
+    // delete(testimonials).where(eq(testimonials.id, id))
     revalidatePath("/admin/testimonials")
     return { success: true }
   } catch (error) {
@@ -230,7 +231,8 @@ export async function deleteTestimonial(id: number) {
 
 export async function createTestimonial(data: any) {
   try {
-    await db.insert(testimonials).values(data)
+    await db.testimonial.create({data})
+    // insert(testimonials).values(data)
     revalidatePath("/admin/testimonials")
     return { success: true }
   } catch (error) {
@@ -241,7 +243,8 @@ export async function createTestimonial(data: any) {
 
 export async function updateTestimonial(id: number, data: any) {
   try {
-    await db.update(testimonials).set(data).where(eq(testimonials.id, id))
+    await db.testimonial.update({data, where: {id}})
+    // .update(testimonials).set(data).where(eq(testimonials.id, id))
     revalidatePath("/admin/testimonials")
     return { success: true }
   } catch (error) {
@@ -354,9 +357,30 @@ export async function getHeroSlide(id: number) {
   }
 }
 
+export async function getAllTestimonialActive() {
+  try {
+    const result = await db.testimonial.findMany({where: {active: true}})
+    return result
+  } catch (error) {
+    console.error("Error fetching all testimonials:", error)
+    return []
+  }
+}
+
+export async function getAllTestimonial() {
+  try {
+    const result = await db.testimonial.findMany()
+    return result
+  } catch (error) {
+    console.error("Error fetching all testimonials:", error)
+    return []
+  }
+}
+
 export async function getTestimonial(id: number) {
   try {
-    const result = await db.select().from(testimonials).where(eq(testimonials.id, id))
+    const result = await db.testimonial.findMany({where: {id}})
+    // .select().from(testimonials).where(eq(testimonials.id, id))
 
     // Verificar se o resultado existe e tem pelo menos um item
     if (!result || result.length === 0) {

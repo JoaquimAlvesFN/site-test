@@ -1,3 +1,4 @@
+import { getAllTestimonialActive } from "@/app/admin/actions"
 import { Star } from "lucide-react"
 
 interface TestimonialProps {
@@ -26,34 +27,36 @@ function TestimonialCard({ quote, author, role, rating }: TestimonialProps) {
   )
 }
 
-export function TestimonialSection() {
+export async function TestimonialSection() {
   // Usar dados estáticos para evitar erros com o banco de dados mock
-  const testimonials = [
-    {
-      id: 1,
-      quote: "Excelente serviço! A instalação foi rápida e o sinal é perfeito. Recomendo a todos.",
-      author: "Carlos Silva",
-      role: "Cliente desde 2019",
-      rating: 5,
-      active: true,
-    },
-    {
-      id: 2,
-      quote: "Ótima variedade de canais e o aplicativo SKY Play é muito prático para assistir em qualquer lugar.",
-      author: "Ana Oliveira",
-      role: "Cliente desde 2020",
-      rating: 4,
-      active: true,
-    },
-    {
-      id: 3,
-      quote: "Atendimento ao cliente excepcional. Tive um problema e resolveram rapidamente.",
-      author: "Pedro Santos",
-      role: "Cliente desde 2018",
-      rating: 5,
-      active: true,
-    },
-  ]
+  // const testimonials = [
+  //   {
+  //     id: 1,
+  //     quote: "Excelente serviço! A instalação foi rápida e o sinal é perfeito. Recomendo a todos.",
+  //     author: "Carlos Silva",
+  //     role: "Cliente desde 2019",
+  //     rating: 5,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     quote: "Ótima variedade de canais e o aplicativo SKY Play é muito prático para assistir em qualquer lugar.",
+  //     author: "Ana Oliveira",
+  //     role: "Cliente desde 2020",
+  //     rating: 4,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     quote: "Atendimento ao cliente excepcional. Tive um problema e resolveram rapidamente.",
+  //     author: "Pedro Santos",
+  //     role: "Cliente desde 2018",
+  //     rating: 5,
+  //     active: true,
+  //   },
+  // ]
+
+  const testimonials = await getAllTestimonialActive()
 
   return (
     <section className="bg-gray-50 py-12">

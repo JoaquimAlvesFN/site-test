@@ -4,47 +4,50 @@ import { requireAuth } from "@/lib/auth"
 import Link from "next/link"
 import { Plus, Edit, Star } from "lucide-react"
 import { TestimonialDeleteButton } from "@/components/admin/testimonial-delete-button"
+import { getAllTestimonial } from "../actions"
 
 export default async function TestimonialsPage() {
   requireAuth()
 
   // Para o demo, vamos usar dados estáticos
-  const testimonials = [
-    {
-      id: 1,
-      quote:
-        "Assinei a SKY há 2 anos e a qualidade do sinal é excelente. Mesmo em dias de chuva forte, raramente tenho problemas.",
-      author: "Carlos Silva",
-      role: "Cliente SKY Plus",
-      rating: 5,
-      active: true,
-    },
-    {
-      id: 2,
-      quote: "O atendimento ao cliente é muito bom. Tive um problema técnico e resolveram no mesmo dia. Recomendo!",
-      author: "Ana Oliveira",
-      role: "Cliente SKY Premium",
-      rating: 5,
-      active: true,
-    },
-    {
-      id: 3,
-      quote:
-        "Optei pelo plano pré-pago e funciona perfeitamente para minha necessidade. Recarrego a cada 3 meses e economizo.",
-      author: "Roberto Santos",
-      role: "Cliente SKY Pré 90",
-      rating: 4,
-      active: true,
-    },
-    {
-      id: 4,
-      quote: "Estou muito satisfeito com a variedade de canais. Minha família inteira encontra algo para assistir.",
-      author: "Mariana Costa",
-      role: "Cliente SKY Plus",
-      rating: 4,
-      active: false,
-    },
-  ]
+  // const testimonials = [
+  //   {
+  //     id: 1,
+  //     quote:
+  //       "Assinei a SKY há 2 anos e a qualidade do sinal é excelente. Mesmo em dias de chuva forte, raramente tenho problemas.",
+  //     author: "Carlos Silva",
+  //     role: "Cliente SKY Plus",
+  //     rating: 5,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 2,
+  //     quote: "O atendimento ao cliente é muito bom. Tive um problema técnico e resolveram no mesmo dia. Recomendo!",
+  //     author: "Ana Oliveira",
+  //     role: "Cliente SKY Premium",
+  //     rating: 5,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 3,
+  //     quote:
+  //       "Optei pelo plano pré-pago e funciona perfeitamente para minha necessidade. Recarrego a cada 3 meses e economizo.",
+  //     author: "Roberto Santos",
+  //     role: "Cliente SKY Pré 90",
+  //     rating: 4,
+  //     active: true,
+  //   },
+  //   {
+  //     id: 4,
+  //     quote: "Estou muito satisfeito com a variedade de canais. Minha família inteira encontra algo para assistir.",
+  //     author: "Mariana Costa",
+  //     role: "Cliente SKY Plus",
+  //     rating: 4,
+  //     active: false,
+  //   },
+  // ]
+
+  const testimonials = await getAllTestimonial()
 
   return (
     <div className="space-y-6">
