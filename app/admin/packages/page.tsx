@@ -4,61 +4,64 @@ import { requireAuth } from "@/lib/auth"
 import Link from "next/link"
 import { Plus, Edit } from "lucide-react"
 import { PackageDeleteButton } from "@/components/admin/package-delete-button"
+import { getAllPackage } from "../actions"
 
 export default async function PackagesPage() {
   requireAuth()
 
   // Para o demo, vamos usar dados estáticos
-  const packages = [
-    {
-      id: 1,
-      title: "SKY Essencial",
-      price: "89,90",
-      popular: false,
-      tag: "",
-      packageType: "pos-pago",
-    },
-    {
-      id: 2,
-      title: "SKY Plus",
-      price: "129,90",
-      popular: true,
-      tag: "MAIS VENDIDO",
-      packageType: "pos-pago",
-    },
-    {
-      id: 3,
-      title: "SKY Premium",
-      price: "189,90",
-      popular: false,
-      tag: "",
-      packageType: "pos-pago",
-    },
-    {
-      id: 4,
-      title: "SKY Pré 30",
-      price: "69,90",
-      popular: false,
-      tag: "",
-      packageType: "pre-pago",
-    },
-    {
-      id: 5,
-      title: "SKY Pré 90",
-      price: "179,90",
-      popular: true,
-      tag: "MELHOR CUSTO-BENEFÍCIO",
-      packageType: "pre-pago",
-    },
-    {
-      id: 6,
-      title: "SKY Pré 180",
-      price: "329,90",
-      popular: false,
-      tag: "",
-      packageType: "pre-pago",
-    },
-  ]
+  // const packages = [
+  //   {
+  //     id: 1,
+  //     title: "SKY Essencial",
+  //     price: "89,90",
+  //     popular: false,
+  //     tag: "",
+  //     packageType: "pos-pago",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "SKY Plus",
+  //     price: "129,90",
+  //     popular: true,
+  //     tag: "MAIS VENDIDO",
+  //     packageType: "pos-pago",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "SKY Premium",
+  //     price: "189,90",
+  //     popular: false,
+  //     tag: "",
+  //     packageType: "pos-pago",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "SKY Pré 30",
+  //     price: "69,90",
+  //     popular: false,
+  //     tag: "",
+  //     packageType: "pre-pago",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "SKY Pré 90",
+  //     price: "179,90",
+  //     popular: true,
+  //     tag: "MELHOR CUSTO-BENEFÍCIO",
+  //     packageType: "pre-pago",
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "SKY Pré 180",
+  //     price: "329,90",
+  //     popular: false,
+  //     tag: "",
+  //     packageType: "pre-pago",
+  //   },
+  // ]
+
+  const packages = await getAllPackage()
 
   return (
     <div className="space-y-6">

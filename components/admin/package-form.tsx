@@ -69,7 +69,7 @@ export function PackageForm({ packageData }: PackageFormProps) {
 
       const packagePayload = {
         ...formData,
-        features: filteredFeatures,
+        features: filteredFeatures.join(","),
       }
 
       if (packageData?.id) {
@@ -169,7 +169,7 @@ export function PackageForm({ packageData }: PackageFormProps) {
         <div>
           <Label>Características</Label>
           <div className="space-y-2 mt-2">
-            {features.map((feature, index) => (
+            {features?.map((feature, index) => (
               <div key={index} className="flex gap-2">
                 <Input
                   value={feature}

@@ -142,7 +142,8 @@ export async function updateSetting(key: string, value: string) {
 
 export async function deletePackage(id: number) {
   try {
-    await db.delete(packages).where(eq(packages.id, id))
+    await db.package.delete({where: {id}})
+    // delete(packages).where(eq(packages.id, id))
     revalidatePath("/admin/packages")
     return { success: true }
   } catch (error) {
@@ -153,7 +154,10 @@ export async function deletePackage(id: number) {
 
 export async function createPackage(data: any) {
   try {
-    await db.insert(packages).values(data)
+    await db.package.create({
+      data
+    })
+    // .insert(packages).values(data)
     revalidatePath("/admin/packages")
     return { success: true }
   } catch (error) {
@@ -164,7 +168,8 @@ export async function createPackage(data: any) {
 
 export async function updatePackage(id: number, data: any) {
   try {
-    await db.update(packages).set(data).where(eq(packages.id, id))
+    await db.package.update({data, where: {id}})
+    // update(packages).set(data).where(eq(packages.id, id))
     revalidatePath("/admin/packages")
     return { success: true }
   } catch (error) {
@@ -298,9 +303,20 @@ export async function getFaq(id: number) {
   }
 }
 
+export async function getAllPackage() {
+  try {
+    const result = await db.package.findMany()
+    return result
+  } catch (error) {
+    console.error("Error fetching all packages:", error)
+    return []
+  }
+}
+
 export async function getPackage(id: number) {
   try {
-    const result = await db.select().from(packages).where(eq(packages.id, id))
+    const result = await db.package.findMany({where: {id}})
+    // select().from(packages).where(eq(packages.id, id))
 
     // Verificar se o resultado existe e tem pelo menos um item
     if (!result || result.length === 0) {
@@ -308,7 +324,12 @@ export async function getPackage(id: number) {
       return null
     }
 
-    return result[0]
+    const resultMapper = {
+      ...result[0],
+      features: result[0].features.split(",")
+    }
+
+    return resultMapper
   } catch (error) {
     console.error("Error fetching package:", error)
     return null
@@ -1485,9 +1506,9 @@ export async function deleteWhyChooseFeature(id: number) {
 // Função para obter os dados da seção de internet
 export async function getInternetSection() {
   try {
-    const result = await db.select().from(internetSection)
+    // const result = await db.select().from(internetSection)
 
-    if (!result || result.length === 0) {
+    // if (!result || result.length === 0) {
       // Retornar dados padrão se não houver registros
       return {
         id: 1,
@@ -1508,9 +1529,9 @@ export async function getInternetSection() {
         active: true,
         updatedAt: getTimestamp(),
       }
-    }
+    // }
 
-    return result[0]
+    // return result[0]
   } catch (error) {
     console.error("Error fetching internet section:", error)
     // Retornar dados padrão em caso de erro
@@ -1570,9 +1591,10 @@ export async function updateInternetSection(data: any) {
 // Função para obter os dados da seção de negócios
 export async function getBusinessSection() {
   try {
-    const result = await db.select().from(businessSection)
+    // const result = await db.businessSection.findMany() || [];
+    // .select().from(businessSection)
 
-    if (!result || result.length === 0) {
+    // if (!result || result.length === 0) {
       // Retornar dados padrão se não houver registros
       return {
         id: 1,
@@ -1603,9 +1625,9 @@ export async function getBusinessSection() {
         active: true,
         updatedAt: getTimestamp(),
       }
-    }
+    // }
 
-    return result[0]
+    // return result[0]
   } catch (error) {
     console.error("Error fetching business section:", error)
     // Retornar dados padrão em caso de erro
@@ -1676,82 +1698,83 @@ export async function updateBusinessSection(data: any) {
 export async function getActivePackages() {
   try {
     // Dados estáticos para garantir que a função sempre retorne um array válido
-    const staticPackages = [
-      {
-        id: 1,
-        title: "SKY Essencial",
-        price: "89,90",
-        description: "Pacote básico com os principais canais",
-        features: ["60+ canais", "SKY Play incluso", "Instalação grátis", "Sem fidelidade"],
-        popular: false,
-        recurrent: true,
-        packageType: "pos-pago",
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-      {
-        id: 2,
-        title: "SKY HD",
-        price: "129,90",
-        description: "Pacote intermediário com canais em HD",
-        features: ["100+ canais", "Canais em HD", "SKY Play incluso", "Instalação grátis"],
-        popular: true,
-        recurrent: true,
-        discount: "20% OFF por 3 meses",
-        tag: "MAIS VENDIDO",
-        packageType: "pos-pago",
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-      {
-        id: 3,
-        title: "SKY Premium",
-        price: "189,90",
-        description: "Pacote completo com todos os canais",
-        features: ["150+ canais", "Canais premium", "SKY Play incluso", "Instalação grátis"],
-        popular: false,
-        recurrent: true,
-        packageType: "pos-pago",
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-      {
-        id: 4,
-        title: "SKY Pré HD",
-        price: "69,90",
-        description: "Recarga mensal com canais em HD",
-        features: ["80+ canais", "Canais em HD", "Sem análise de crédito", "Sem mensalidade"],
-        popular: false,
-        recurrent: false,
-        packageType: "pre-pago",
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-      {
-        id: 5,
-        title: "SKY Pré Básico",
-        price: "49,90",
-        description: "Recarga mensal com canais básicos",
-        features: ["50+ canais", "Sem análise de crédito", "Sem mensalidade", "Recarregue quando quiser"],
-        popular: true,
-        tag: "ECONÔMICO",
-        recurrent: false,
-        packageType: "pre-pago",
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-    ]
+    // const staticPackages = [
+    //   {
+    //     id: 1,
+    //     title: "SKY Essencial",
+    //     price: "89,90",
+    //     description: "Pacote básico com os principais canais",
+    //     features: ["60+ canais", "SKY Play incluso", "Instalação grátis", "Sem fidelidade"],
+    //     popular: false,
+    //     recurrent: true,
+    //     packageType: "pos-pago",
+    //     createdAt: "2023-04-15T10:30:00.000Z",
+    //     updatedAt: "2023-04-15T10:30:00.000Z",
+    //   },
+    //   {
+    //     id: 2,
+    //     title: "SKY HD",
+    //     price: "129,90",
+    //     description: "Pacote intermediário com canais em HD",
+    //     features: ["100+ canais", "Canais em HD", "SKY Play incluso", "Instalação grátis"],
+    //     popular: true,
+    //     recurrent: true,
+    //     discount: "20% OFF por 3 meses",
+    //     tag: "MAIS VENDIDO",
+    //     packageType: "pos-pago",
+    //     createdAt: "2023-04-15T10:30:00.000Z",
+    //     updatedAt: "2023-04-15T10:30:00.000Z",
+    //   },
+    //   {
+    //     id: 3,
+    //     title: "SKY Premium",
+    //     price: "189,90",
+    //     description: "Pacote completo com todos os canais",
+    //     features: ["150+ canais", "Canais premium", "SKY Play incluso", "Instalação grátis"],
+    //     popular: false,
+    //     recurrent: true,
+    //     packageType: "pos-pago",
+    //     createdAt: "2023-04-15T10:30:00.000Z",
+    //     updatedAt: "2023-04-15T10:30:00.000Z",
+    //   },
+    //   {
+    //     id: 4,
+    //     title: "SKY Pré HD",
+    //     price: "69,90",
+    //     description: "Recarga mensal com canais em HD",
+    //     features: ["80+ canais", "Canais em HD", "Sem análise de crédito", "Sem mensalidade"],
+    //     popular: false,
+    //     recurrent: false,
+    //     packageType: "pre-pago",
+    //     createdAt: "2023-04-15T10:30:00.000Z",
+    //     updatedAt: "2023-04-15T10:30:00.000Z",
+    //   },
+    //   {
+    //     id: 5,
+    //     title: "SKY Pré Básico",
+    //     price: "49,90",
+    //     description: "Recarga mensal com canais básicos",
+    //     features: ["50+ canais", "Sem análise de crédito", "Sem mensalidade", "Recarregue quando quiser"],
+    //     popular: true,
+    //     tag: "ECONÔMICO",
+    //     recurrent: false,
+    //     packageType: "pre-pago",
+    //     createdAt: "2023-04-15T10:30:00.000Z",
+    //     updatedAt: "2023-04-15T10:30:00.000Z",
+    //   },
+    // ]
 
     // Tentar obter os pacotes do banco de dados
-    const result = await db.select().from(packages)
+    const result = await db.package.findMany()
+    // .select().from(packages)
 
     // Se o banco de dados retornar dados válidos, use-os
-    if (Array.isArray(result) && result.length > 0) {
-      return result
-    }
+    // if (Array.isArray(result) && result.length > 0) {
+    //   return result
+    // }
 
     // Caso contrário, use os dados estáticos
-    return staticPackages
+    return result
   } catch (error) {
     console.error("Error fetching active packages:", error)
     // Em caso de erro, retornar um array vazio para evitar quebrar a UI
@@ -1780,7 +1803,8 @@ export async function getActiveHeroSlides() {
 // Função para obter os canais ativos
 export async function getActiveChannels() {
   try {
-    const result = await db.select().from(channels).orderBy(channels.order)
+    const result = await db.channel.findMany({orderBy: {order: 'asc'}, where: {active: true}})
+    // .select().from(channels).orderBy(channels.order)
 
     if (!result || result.length === 0) {
       // Retornar dados padrão se não houver registros

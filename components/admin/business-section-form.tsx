@@ -45,7 +45,7 @@ export function BusinessSectionForm() {
   useEffect(() => {
     async function loadData() {
       try {
-        const data = await getBusinessSection()
+        const data = await getBusinessSection() || [];
         setFormData(data)
         setFeatures(data.features as { icon: string; title: string; description: string }[])
         setBenefits(data.benefits as string[])

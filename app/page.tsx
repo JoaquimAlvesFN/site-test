@@ -135,7 +135,7 @@ export default async function Home() {
                         title={pkg.title}
                         price={pkg.price}
                         description={pkg.description}
-                        features={pkg.features as string[]}
+                        features={pkg.features.split(',') as string[]}
                         popular={pkg.popular}
                         recurrent={pkg.recurrent}
                         discount={pkg.discount}
@@ -159,7 +159,7 @@ export default async function Home() {
                         title={pkg.title}
                         price={pkg.price}
                         description={pkg.description}
-                        features={pkg.features as string[]}
+                        features={pkg.features.split(',') as string[]}
                         popular={pkg.popular}
                         recurrent={pkg.recurrent}
                         discount={pkg.discount}
@@ -177,7 +177,7 @@ export default async function Home() {
             </Tabs>
 
             <div className="mt-12 text-center">
-              <ContactModal
+              {/* <ContactModal
                 trigger={
                   <Button size="lg" className="bg-[#E30613] hover:bg-[#c00511]">
                     <span className="flex items-center gap-2">
@@ -188,7 +188,7 @@ export default async function Home() {
                 }
                 title="Conheça Todos os Pacotes"
                 description="Preencha seus dados para conhecer todos os nossos pacotes. Nossa equipe entrará em contato em breve."
-              />
+              /> */}
             </div>
           </div>
         </section>

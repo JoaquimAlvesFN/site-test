@@ -168,15 +168,15 @@ export default async function PackageEditPage({ params }: PackageEditPageProps) 
   let packageData = await getPackage(id)
 
   // Se não encontrar no banco de dados, procurar nos dados estáticos
-  if (!packageData) {
-    packageData = staticPackages.find((pkg) => pkg.id === id)
+  // if (!packageData) {
+  //   packageData = staticPackages.find((pkg) => pkg.id === id)
 
-    // Se ainda não encontrar, retornar 404
-    if (!packageData) {
-      console.error(`Package with ID ${id} not found`)
-      notFound()
-    }
-  }
+  //   // Se ainda não encontrar, retornar 404
+  //   if (!packageData) {
+  //     console.error(`Package with ID ${id} not found`)
+  //     notFound()
+  //   }
+  // }
 
   return (
     <div className="space-y-6">
