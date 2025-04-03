@@ -23,6 +23,8 @@ import {
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 import { getDb } from "@/lib/db"
+import axios from "axios"
+import { uploadImageToSupabase } from "@/lib/supabase"
 
 export async function getAllSettings() {
   try {
@@ -415,51 +417,25 @@ export async function getTestimonial(id: number) {
 // Function to get all images
 export async function getImages() {
   try {
-    // Dados estáticos para garantir que a função sempre retorne algo válido
-    const staticImages = [
-      {
-        id: 1,
-        name: "hero-banner.jpg",
-        url: "/uploads/hero-banner.jpg",
-        size: 245000,
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-      {
-        id: 2,
-        name: "sky-logo.png",
-        url: "/uploads/sky-logo.png",
-        size: 32000,
-        createdAt: "2023-04-16T14:20:00.000Z",
-        updatedAt: "2023-04-16T14:20:00.000Z",
-      },
-      {
-        id: 3,
-        name: "internet-promo.jpg",
-        url: "/uploads/internet-promo.jpg",
-        size: 178000,
-        createdAt: "2023-04-17T09:15:00.000Z",
-        updatedAt: "2023-04-17T09:15:00.000Z",
-      },
-    ]
-
-    // Tentar obter as imagens do banco de dados
-    try {
-      const dbImages = await db.image.findMany();
-      // select().from(images).orderBy(images.createdAt)
-
-      // Se o banco de dados retornar dados válidos, use-os
-      if (Array.isArray(dbImages) && dbImages.length > 0) {
-        return dbImages
+    // Buscar imagens do banco de dados, ordenando pelas mais recentes primeiro
+    const dbImages = await db.image.findMany({
+      orderBy: {
+        createdAt: 'desc'
       }
+    });
 
-      // Caso contrário, use os dados estáticos
-      return staticImages
-    } catch (error) {
-      console.error("Erro ao buscar imagens do banco de dados:", error)
-      // Em caso de erro, retornar os dados estáticos
-      return staticImages
-    }
+    // Vamos garantir que todas as propriedades estejam consistentes
+    const images = dbImages.map(img => ({
+      id: img.id,
+      name: img.name,
+      url: img.url,
+      size: img.size,
+      createdAt: img.createdAt,
+      updatedAt: img.updatedAt
+    }));
+
+    console.log(`Recuperadas ${images.length} imagens do banco de dados`);
+    return images;
   } catch (error) {
     console.error("Erro ao buscar imagens:", error)
     // Em caso de erro, retornar um array vazio para evitar quebrar a UI
@@ -476,22 +452,52 @@ export async function uploadImage(formData: FormData) {
       throw new Error("Nenhum arquivo enviado")
     }
 
-    // For the mock implementation, we'll just pretend to save the file
-    // and return a success response with a fake URL
-    const fileName = `upload-${Date.now()}-${file.name.replace(/\s+/g, "-").toLowerCase()}`
-    const fileUrl = `/uploads/${fileName}`
+    // Verificar se o arquivo é uma imagem válida
+    const validTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"]
+    if (!validTypes.includes(file.type)) {
+      throw new Error("Tipo de arquivo não suportado. Use: JPG, PNG, GIF ou WebP")
+    }
 
-    // Save information to the database
-    await db.insert(images).values({
-      name: file.name,
-      url: fileUrl,
-      size: file.size,
-      createdAt: getTimestamp(),
-      updatedAt: getTimestamp(),
-    })
+    // Verificar o tamanho do arquivo (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error("Arquivo muito grande (máximo 5MB)")
+    }
 
-    revalidatePath("/admin/images")
-    return { success: true, url: fileUrl }
+    console.log(`Iniciando upload da imagem ${file.name} (${file.size} bytes)`)
+    
+    // Fazer upload direto para o Supabase
+    try {
+      const fileUrl = await uploadImageToSupabase(file)
+      
+      if (!fileUrl) {
+        throw new Error("Falha no upload da imagem para o Supabase")
+      }
+      
+      console.log(`Upload concluído com sucesso. URL: ${fileUrl}`)
+
+      // Salvar o registro no banco de dados com a URL do Supabase
+      const newImage = await db.image.create({ 
+        data: {
+          name: file.name,
+          url: fileUrl,  // Esta URL agora é a URL completa do Supabase
+          size: file.size,
+          createdAt: getTimestamp(),
+          updatedAt: getTimestamp(),
+        },
+      })
+      
+      console.log(`Imagem registrada no banco de dados com ID: ${newImage.id}`)
+      
+      // Revalidar todas as rotas que possam exibir imagens
+      revalidatePath("/admin/images")
+      revalidatePath("/admin/institucional")
+      revalidatePath("/admin")
+      
+      return { success: true, url: fileUrl, id: newImage.id }
+    } catch (uploadError) {
+      console.error("Erro no upload da imagem:", uploadError)
+      throw uploadError
+    }
   } catch (error) {
     console.error("Erro ao fazer upload da imagem:", error)
     throw error
@@ -501,8 +507,38 @@ export async function uploadImage(formData: FormData) {
 // Function to delete an image
 export async function deleteImage(id: number) {
   try {
+    // Get the image URL from the database
+    const image = await db.image.findUnique({ where: { id } });
+    
+    if (image && image.url) {
+      // Extract the path from the Supabase URL
+      // URL format is typically like: https://[project-ref].supabase.co/storage/v1/object/public/images/uploads/filename.jpg
+      try {
+        if (image.url.includes('supabase')) {
+          // Get just the filename part from the URL
+          const urlParts = image.url.split('/');
+          const fileName = urlParts[urlParts.length - 1];
+          const filePath = `uploads/${fileName}`;
+          
+          // Import the supabase client
+          const { supabase } = await import('@/lib/supabase');
+          
+          // Delete the file from Supabase storage
+          const { error } = await supabase.storage
+            .from('images')
+            .remove([filePath]);
+            
+          if (error) {
+            console.error("Erro ao excluir arquivo do Supabase:", error);
+          }
+        }
+      } catch (storageError) {
+        console.error("Erro ao excluir arquivo do storage:", storageError);
+      }
+    }
+
     // Delete the record from the database
-    await db.delete(images).where(eq(images.id, id))
+    await db.image.delete({where: {id}});
 
     revalidatePath("/admin/images")
     return { success: true }
@@ -552,20 +588,20 @@ export async function getCompanyInfo() {
       aboutTitle: "Quem Somos",
       aboutDescription:
         "A SKY Brasil é uma empresa de telecomunicações que oferece serviços de TV por assinatura via satélite e internet banda larga. Fundada em 1996, a empresa se consolidou como líder no mercado brasileiro, atendendo milhões de clientes em todo o país.",
-      aboutDescription2:
-        "Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do Brasil, incluindo áreas remotas onde outras tecnologias não chegam.",
-      clientsCount: "12 milhões",
-      employeesCount: "5 mil",
-      channelsCount: "200",
-      coveragePercent: "100",
-      heroTitle: "Transformando o entretenimento brasileiro desde 1996",
-      heroSubtitle:
-        "Líder em TV por assinatura via satélite no Brasil, oferecendo a melhor experiência em entretenimento para milhões de famílias.",
-      heroImage: "/placeholder.svg?height=600&width=800",
-      heroImageAlt: "SKY Sede",
-      heroImageCaption: "Sede SKY Brasil",
-      heroImageLocation: "São Paulo, SP",
-      updatedAt: getTimestamp(),
+        aboutDescription2:
+          "Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do Brasil, incluindo áreas remotas onde outras tecnologias não chegam.",
+        clientsCount: "12 milhões",
+        employeesCount: "5 mil",
+        channelsCount: "200",
+        coveragePercent: "100",
+        heroTitle: "Transformando o entretenimento brasileiro desde 1996",
+        heroSubtitle:
+          "Líder em TV por assinatura via satélite no Brasil, oferecendo a melhor experiência em entretenimento para milhões de famílias.",
+        heroImage: "/placeholder.svg?height=600&width=800",
+        heroImageAlt: "SKY Sede",
+        heroImageCaption: "Sede SKY Brasil",
+        heroImageLocation: "São Paulo, SP",
+        updatedAt: getTimestamp(),
     }
   }
 }
@@ -1690,11 +1726,11 @@ export async function getBusinessSection() {
           title: "Áreas Comuns",
           description: "Entretenimento em lobbies e salas de espera",
         },
-        {
-          icon: "BarChart",
-          title: "Análise de Uso",
-          description: "Relatórios de utilização e preferências",
-        },
+        // {
+        //   icon: "BarChart",
+        //   title: "Análise de Uso",
+        //   description: "Relatórios de utilização e preferências",
+        // },
       ],
       benefits: ["Atendimento prioritário", "Suporte técnico 24/7", "Instalação profissional", "Condições especiais"],
       cta: "Solicitar Proposta Comercial",

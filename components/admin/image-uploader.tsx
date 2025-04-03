@@ -9,7 +9,11 @@ import { uploadImage } from "@/app/admin/actions"
 import { toast } from "@/components/ui/use-toast"
 import { useRouter } from "next/navigation"
 
-export function ImageUploader() {
+interface ImageUploaderProps {
+  onUploadComplete?: () => void;
+}
+
+export function ImageUploader({ onUploadComplete }: ImageUploaderProps) {
   const [files, setFiles] = useState<File[]>([])
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -62,6 +66,12 @@ export function ImageUploader() {
 
       // Clear files and refresh the page
       setFiles([])
+      
+      // Chamar o callback para atualizar a lista de imagens
+      if (onUploadComplete) {
+        onUploadComplete();
+      }
+      
       router.refresh()
     } catch (error) {
       console.error("Erro ao fazer upload:", error)

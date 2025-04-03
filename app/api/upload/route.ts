@@ -1,9 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { writeFile } from "fs/promises"
-import { join } from "path"
 import { v4 as uuidv4 } from "uuid"
 import { db, images, getTimestamp } from "@/lib/db"
-import { mkdir } from "fs/promises"
+import { uploadImageToSupabase } from "@/lib/supabase"
 
 export async function POST(request: NextRequest) {
   try {
@@ -25,36 +23,12 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Arquivo muito grande (máximo 5MB)" }, { status: 400 })
     }
 
-    // Gerar um nome de arquivo único
-    const fileName = `${uuidv4()}-${file.name.replace(/\s+/g, "-").toLowerCase()}`
-
-    // Criar diretório de uploads se não existir
-    const uploadDir = join(process.cwd(), "public", "uploads")
-    try {
-      await mkdir(uploadDir, { recursive: true })
-    } catch (error) {
-      console.error("Erro ao criar diretório de uploads:", error)
+    // Upload para o Supabase
+    const fileUrl = await uploadImageToSupabase(file)
+    
+    if (!fileUrl) {
+      return NextResponse.json({ success: false, message: "Erro ao fazer upload para o Supabase" }, { status: 500 })
     }
-
-    // Converter o arquivo para um buffer
-    const bytes = await file.arrayBuffer()
-    const buffer = Buffer.from(bytes)
-
-    // Salvar o arquivo no diretório de uploads
-    const filePath = join(uploadDir, fileName)
-    await writeFile(filePath, buffer)
-
-    // URL pública do arquivo
-    const fileUrl = `/uploads/${fileName}`
-
-    // Salvar informações do arquivo no banco de dados
-    await db.insert(images).values({
-      name: file.name,
-      url: fileUrl,
-      size: file.size,
-      createdAt: getTimestamp(),
-      updatedAt: getTimestamp(),
-    })
 
     return NextResponse.json({
       success: true,

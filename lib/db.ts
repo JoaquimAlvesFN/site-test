@@ -758,9 +758,6 @@ export const businessSection = {
   active: { equals: (value: boolean) => ({ value }) },
 }
 
-// Criar uma instância do banco de dados mock
-// export const db = new MockDatabase()
-
 
 export const getDb = async () => {
   return db

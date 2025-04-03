@@ -8,38 +8,28 @@ import { ImageUploader } from "@/components/admin/image-uploader"
 import { getImages } from "@/app/admin/actions"
 import Image from "next/image"
 import { ImageDeleteButton } from "@/components/admin/image-delete-button"
+import { useEffect, useState, useCallback } from "react"
+import { useRouter } from "next/navigation"
 
-export default async function ImagesPage() {
+export default function ImagesPage() {
   requireAuth()
+  const [images, setImages] = useState<any[]>([]);
+  const router = useRouter();
 
-  // Buscar imagens do banco de dados
-  const images = [
-    {
-      id: 1,
-      name: "hero-banner.jpg",
-      url: "/uploads/hero-banner.jpg",
-      size: 245000,
-      createdAt: "2023-04-15T10:30:00.000Z",
-      updatedAt: "2023-04-15T10:30:00.000Z",
-    },
-    {
-      id: 2,
-      name: "sky-logo.png",
-      url: "/uploads/sky-logo.png",
-      size: 32000,
-      createdAt: "2023-04-16T14:20:00.000Z",
-      updatedAt: "2023-04-16T14:20:00.000Z",
-    },
-    {
-      id: 3,
-      name: "internet-promo.jpg",
-      url: "/uploads/internet-promo.jpg",
-      size: 178000,
-      createdAt: "2023-04-17T09:15:00.000Z",
-      updatedAt: "2023-04-17T09:15:00.000Z",
-    },
-  ];
-  // await getImages()
+  const fetchImages = useCallback(async () => {
+    const result = await getImages();
+    setImages(result || []);
+  }, []);
+
+  useEffect(() => {
+    fetchImages();
+  }, [fetchImages]);
+
+  // Função para recarregar imagens após o upload
+  const handleImageUploaded = useCallback(() => {
+    fetchImages();
+    router.refresh();
+  }, [fetchImages, router]);
 
   return (
     <div className="space-y-6">
@@ -48,6 +38,9 @@ export default async function ImagesPage() {
           <h1 className="text-3xl font-bold">Banco de Imagens</h1>
           <p className="text-muted-foreground">Gerencie as imagens utilizadas no site</p>
         </div>
+        <Button onClick={fetchImages} variant="outline" size="sm">
+          Atualizar
+        </Button>
       </div>
 
       <Card>
@@ -55,7 +48,7 @@ export default async function ImagesPage() {
           <CardTitle>Upload de Imagens</CardTitle>
         </CardHeader>
         <CardContent>
-          <ImageUploader />
+          <ImageUploader onUploadComplete={handleImageUploaded} />
         </CardContent>
       </Card>
 
@@ -64,13 +57,13 @@ export default async function ImagesPage() {
           <CardTitle>Imagens Disponíveis</CardTitle>
         </CardHeader>
         <CardContent>
-          {images.length === 0 ? (
+          {images && images.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               <p>Nenhuma imagem encontrada. Faça upload de imagens para começar.</p>
             </div>
           ) : (
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-              {images.map((image) => (
+              {images?.map((image) => (
                 <div key={image.id} className="border rounded-md overflow-hidden group relative">
                   <div className="aspect-square relative">
                     <Image

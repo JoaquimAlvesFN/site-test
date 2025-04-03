@@ -35,7 +35,7 @@ export default function InstitucionalPage() {
                   Líder em TV por assinatura via satélite no Brasil, oferecendo a melhor experiência em entretenimento
                   para milhões de famílias.
                 </p>
-                <div className="pt-4 flex flex-col sm:flex-row gap-4">
+                {/* <div className="pt-4 flex flex-col sm:flex-row gap-4">
                   <Button size="lg" className="bg-white text-[#00205B] hover:bg-white/90" asChild>
                     <Link href="#nossa-historia">Conheça Nossa História</Link>
                   </Button>
@@ -48,7 +48,7 @@ export default function InstitucionalPage() {
                     title="Fale Conosco"
                     description="Preencha seus dados para entrar em contato com nossa equipe. Responderemos o mais breve possível."
                   />
-                </div>
+                </div> */}
               </div>
               <div className="relative hidden lg:block">
                 <Image
@@ -58,10 +58,10 @@ export default function InstitucionalPage() {
                   height={500}
                   className="rounded-lg shadow-2xl"
                 />
-                <div className="absolute -bottom-6 -right-6 bg-white text-[#00205B] p-4 rounded-lg shadow-lg">
+                {/* <div className="absolute -bottom-6 -right-6 bg-white text-[#00205B] p-4 rounded-lg shadow-lg">
                   <p className="text-sm font-medium">Sede SKY Brasil</p>
                   <p className="text-xs text-muted-foreground">São Paulo, SP</p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -91,7 +91,7 @@ export default function InstitucionalPage() {
                   Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do
                   Brasil, incluindo áreas remotas onde outras tecnologias não chegam.
                 </p>
-                <div className="grid grid-cols-2 gap-4 mt-8">
+                {/* <div className="grid grid-cols-2 gap-4 mt-8">
                   <div className="bg-slate-50 p-4 rounded-lg text-center">
                     <p className="text-3xl font-bold text-[#E30613]">+12 milhões</p>
                     <p className="text-sm text-muted-foreground">Clientes atendidos</p>
@@ -108,7 +108,7 @@ export default function InstitucionalPage() {
                     <p className="text-3xl font-bold text-[#E30613]">100%</p>
                     <p className="text-sm text-muted-foreground">Cobertura nacional</p>
                   </div>
-                </div>
+                </div> */}
               </div>
               <div className="order-1 lg:order-2 grid grid-cols-2 gap-4">
                 <div className="space-y-4">
@@ -176,7 +176,7 @@ export default function InstitucionalPage() {
         </section>
 
         {/* Nossa História */}
-        <section id="nossa-historia" className="py-16 bg-white">
+        {/* <section id="nossa-historia" className="py-16 bg-white">
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Nossa História</h2>
@@ -224,7 +224,7 @@ export default function InstitucionalPage() {
               />
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Nossa Equipe */}
         <section className="py-16 bg-slate-50">
@@ -266,7 +266,7 @@ export default function InstitucionalPage() {
         </section>
 
         {/* Nossas Instalações */}
-        <section className="py-16 bg-white">
+        {/* <section className="py-16 bg-white">
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Nossas Instalações</h2>
@@ -362,7 +362,7 @@ export default function InstitucionalPage() {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Contato */}
         <section className="py-16 bg-[#00205B] text-white">

@@ -194,7 +194,7 @@ export default async function Home() {
         </section>
 
         <Suspense fallback={<div>Carregando...</div>}>
-          <InternetSection />
+          {/* <InternetSection /> */}
         </Suspense>
 
         <section id="channels" className="py-16 bg-slate-50">
