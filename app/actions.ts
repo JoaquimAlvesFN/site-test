@@ -1,6 +1,6 @@
 "use server"
 
-import { db, contacts, getTimestamp } from "@/lib/db"
+import { db, contact, getTimestamp } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
 
@@ -23,11 +23,13 @@ export async function saveContact(data: {
     }
 
     // Salvar no banco de dados
-    await db.insert(contacts).values({
-      ...data,
-      status: "pending",
-      createdAt: getTimestamp(),
-      updatedAt: getTimestamp(),
+    await db.contact.create({
+      data: {
+        ...data,
+        status: "pending",
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp(),
+      }
     })
 
     return {
@@ -46,102 +48,72 @@ export async function saveContact(data: {
 // Função para obter todos os contatos (para o painel admin)
 export async function getContacts() {
   try {
-    // Usar dados estáticos para garantir que a função sempre retorne algo válido
-    const staticContacts = [
-      {
-        id: 1,
-        name: "João Silva",
-        phone: "(11) 98765-4321",
-        email: "joao.silva@example.com",
-        cep: "01234-567",
-        interest: "tv",
-        packageId: 2,
-        status: "pending",
-        notes: "",
-        createdAt: "2023-04-15T10:30:00.000Z",
-        updatedAt: "2023-04-15T10:30:00.000Z",
-      },
-      {
-        id: 2,
-        name: "Maria Oliveira",
-        phone: "(21) 98765-4321",
-        email: "maria.oliveira@example.com",
-        cep: "20000-000",
-        interest: "internet",
-        packageId: null,
-        status: "contacted",
-        notes: "Cliente interessado em internet de alta velocidade",
-        createdAt: "2023-04-16T14:20:00.000Z",
-        updatedAt: "2023-04-17T09:15:00.000Z",
-      },
-      {
-        id: 3,
-        name: "Pedro Santos",
-        phone: "(31) 98765-4321",
-        email: "",
-        cep: "30000-000",
-        interest: "combo",
-        packageId: 3,
-        status: "converted",
-        notes: "Cliente assinou o pacote Premium",
-        createdAt: "2023-04-10T16:45:00.000Z",
-        updatedAt: "2023-04-12T11:30:00.000Z",
-      },
-      {
-        id: 4,
-        name: "Ana Souza",
-        phone: "(41) 98765-4321",
-        email: "ana.souza@example.com",
-        cep: "80000-000",
-        interest: "tv",
-        packageId: 1,
-        status: "canceled",
-        notes: "Cliente desistiu da contratação",
-        createdAt: "2023-04-05T09:10:00.000Z",
-        updatedAt: "2023-04-07T15:20:00.000Z",
-      },
-    ]
-
-    // Tentar obter os contatos do banco de dados
+    // Adicionar log para depuração
+    console.log("Iniciando busca de contatos");
+    
+    // Verificar se a tabela contact existe no banco antes de tentar buscar
     try {
-      const dbContacts = await db.select().from(contacts).orderBy(contacts.createdAt)
-
-      // Se o banco de dados retornar dados válidos, use-os
-      if (Array.isArray(dbContacts) && dbContacts.length > 0) {
-        return dbContacts
+      const contactsData = await db.contact.findMany({
+        orderBy: { createdAt: 'desc' }
+      });
+      
+      // Adicionar log para depuração do formato dos dados
+      console.log(`Encontrados ${contactsData.length} contatos`);
+      
+      // Validar os dados retornados
+      if (!Array.isArray(contactsData)) {
+        console.error("Dados retornados não são um array:", contactsData);
+        return [];
       }
-
-      // Caso contrário, use os dados estáticos
-      return staticContacts
-    } catch (error) {
-      console.error("Erro ao buscar contatos do banco de dados:", error)
-      // Em caso de erro, retornar os dados estáticos
-      return staticContacts
+      
+      return contactsData;
+    } catch (dbError) {
+      // Erros específicos de banco de dados
+      if (dbError instanceof Error && dbError.message.includes("no such table")) {
+        console.error("Tabela de contatos não existe no banco:", dbError);
+        return [];
+      }
+      
+      // Outros erros de banco de dados
+      throw dbError;
     }
   } catch (error) {
-    console.error("Erro ao buscar contatos:", error)
-    // Em caso de erro, retornar um array vazio para evitar quebrar a UI
-    return []
+    console.error("Erro ao buscar contatos:", error);
+    // Retornar array vazio em caso de erro para evitar quebrar a UI
+    return [];
   }
 }
 
 // Função para atualizar o status de um contato
-export async function updateContactStatus(id: number, status: string, notes?: string) {
+export async function updateContactStatus(contactId: number, newStatus: string) {
   try {
-    await db
-      .update(contacts)
-      .set({
-        status,
-        notes,
-        updatedAt: getTimestamp(),
-      })
-      .where(eq(contacts.id, id))
-
-    revalidatePath("/admin/contacts")
-    return { success: true }
+    console.log(`Atualizando status do contato ${contactId} para ${newStatus}`);
+    
+    // Validar o status
+    const validStatus = ["pending", "contacted", "converted", "canceled"];
+    if (!validStatus.includes(newStatus)) {
+      console.error(`Status inválido: ${newStatus}`);
+      return { success: false, message: "Status inválido" };
+    }
+    
+    // Atualizar no banco de dados
+    await db.contact.update({
+      where: { id: contactId },
+      data: { 
+        status: newStatus,
+        updatedAt: getTimestamp() 
+      }
+    });
+    
+    console.log(`Status do contato ${contactId} atualizado com sucesso`);
+    
+    // Revalidar caminhos que mostram contatos
+    revalidatePath("/admin/contacts");
+    
+    return { success: true, message: "Status atualizado com sucesso" };
   } catch (error) {
-    console.error("Erro ao atualizar status do contato:", error)
-    return { success: false }
+    console.error("Erro ao atualizar status do contato:", error);
+    return { success: false, message: "Ocorreu um erro ao atualizar o status" };
   }
 }
 

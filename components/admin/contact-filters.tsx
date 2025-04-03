@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
@@ -10,6 +10,7 @@ import { Search, X } from "lucide-react"
 
 interface ContactFiltersProps {
   onFilterChange: (filters: ContactFilters) => void
+  defaultStatus?: string
 }
 
 export interface ContactFilters {
@@ -19,13 +20,21 @@ export interface ContactFilters {
   status: string
 }
 
-export function ContactFilters({ onFilterChange }: ContactFiltersProps) {
+export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: ContactFiltersProps) {
   const [filters, setFilters] = useState<ContactFilters>({
     name: "",
     email: "",
     phone: "",
-    status: "",
+    status: defaultStatus,
   })
+
+  // Aplicar o filtro inicial ao montar o componente
+  useEffect(() => {
+    // Aplicar o filtro inicial somente se for passado explicitamente
+    if (defaultStatus) {
+      onFilterChange(filters);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleChange = (field: keyof ContactFilters, value: string) => {
     const newFilters = { ...filters, [field]: value }
