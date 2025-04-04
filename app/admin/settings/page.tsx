@@ -2,23 +2,36 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { requireAuth } from "@/lib/auth"
 import { SettingsForm } from "@/components/admin/settings-form"
 import { LogoSettingsForm } from "@/components/admin/logo-settings-form"
+import { getAllSettings } from "@/app/admin/actions"
 
 export default async function SettingsPage() {
   requireAuth()
 
-  // Para o demo, vamos usar dados estáticos
+  // Buscar configurações do banco de dados
+  const settingsData = await getAllSettings()
+  
+  // Mesclar com valores padrão para garantir que todos os campos existam
   const settings = {
-    phone_sales: "0800 600 4990",
-    phone_support: "0800 720 1234",
-    whatsapp: "5511999999999",
-    email: "contato@skypacotes.com.br",
-    promo_banner_text: "Oferta Especial: Assine hoje e ganhe 30 dias de Paramount+ grátis!",
-    promo_banner_link: "#contact",
-    promo_banner_active: "true",
-    facebook: "https://facebook.com/skybrasil",
-    instagram: "https://instagram.com/skybrasil",
-    twitter: "https://twitter.com/skybrasil",
-    youtube: "https://youtube.com/skybrasil",
+    // Contato
+    phone_sales: settingsData.phone_sales || "0800 600 4990",
+    phone_support: settingsData.phone_support || "0800 720 1234",
+    whatsapp: settingsData.whatsapp || "5511999999999",
+    email: settingsData.email || "contato@skypacotes.com.br",
+    
+    // Banners
+    promo_banner_text: settingsData.promo_banner_text || "Oferta Especial: Assine hoje e ganhe 30 dias de Paramount+ grátis!",
+    promo_banner_link: settingsData.promo_banner_link || "#contact",
+    promo_banner_active: settingsData.promo_banner_active || "true",
+    
+    // Redes sociais
+    facebook: settingsData.facebook || "https://facebook.com/skybrasil",
+    instagram: settingsData.instagram || "https://instagram.com/skybrasil",
+    twitter: settingsData.twitter || "https://twitter.com/skybrasil",
+    youtube: settingsData.youtube || "https://youtube.com/skybrasil",
+    
+    // Logos
+    header_logo: settingsData.header_logo || "",
+    footer_logo: settingsData.footer_logo || "",
   }
 
   return (
@@ -35,7 +48,7 @@ export default async function SettingsPage() {
           </CardHeader>
           <CardContent>
             <SettingsForm
-              settings={settings}
+              settings={settingsData}
               section="contact"
               fields={[
                 { key: "phone_sales", label: "Telefone de Vendas", placeholder: "0800 600 4990" },

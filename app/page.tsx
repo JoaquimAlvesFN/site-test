@@ -46,10 +46,10 @@ export default async function Home() {
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center space-x-2">
-              {/* <DynamicLogo
+              <DynamicLogo
                 type="header"
                 fallbackSrc="https://sjc.microlink.io/EVPkxg5JrNWxZNP9AWwi5KRkyc0EaklEAI0j6mP3BLANnvCK51AwejCcuTRPp1RtaCoUH-vI4pLeAn4KL4YmWQ.jpeg"
-              /> */}
+              />
             </Link>
             <nav className="hidden md:flex gap-6">
               <Link href="#tv-packages" className="text-sm font-medium transition-colors hover:text-[#E30613]">

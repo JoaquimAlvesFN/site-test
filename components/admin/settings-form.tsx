@@ -52,8 +52,12 @@ export function SettingsForm({ settings, section, fields }: SettingsFormProps) {
 
     try {
       // Salvar cada configuração individualmente
+      console.log("formData", formData);
       for (const [key, value] of Object.entries(formData)) {
-        await updateSetting(key, value)
+        const result = await updateSetting(key, value)
+        if (!result.success) {
+          throw new Error(result.error || 'Falha ao salvar configuração')
+        }
       }
 
       toast({
@@ -64,7 +68,7 @@ export function SettingsForm({ settings, section, fields }: SettingsFormProps) {
       console.error("Failed to save settings:", error)
       toast({
         title: "Erro ao salvar",
-        description: "Ocorreu um erro ao salvar as configurações.",
+        description: error instanceof Error ? error.message : "Ocorreu um erro ao salvar as configurações.",
         variant: "destructive",
       })
     } finally {

@@ -31,7 +31,10 @@ export function LogoSettingsForm({ settings }: LogoSettingsFormProps) {
     try {
       // Salvar cada configuração individualmente
       for (const [key, value] of Object.entries(formData)) {
-        await updateSetting(key, value)
+        const result = await updateSetting(key, value)
+        if (!result.success) {
+          throw new Error(result.error || `Erro ao salvar configuração ${key}`)
+        }
       }
 
       toast({
@@ -42,7 +45,7 @@ export function LogoSettingsForm({ settings }: LogoSettingsFormProps) {
       console.error("Failed to save logo settings:", error)
       toast({
         title: "Erro ao salvar",
-        description: "Ocorreu um erro ao salvar as configurações de logo.",
+        description: error instanceof Error ? error.message : "Ocorreu um erro ao salvar as configurações de logo.",
         variant: "destructive",
       })
     } finally {

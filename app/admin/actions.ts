@@ -28,11 +28,13 @@ import { uploadImageToSupabase } from "@/lib/supabase"
 
 export async function getAllSettings() {
   try {
-    const results = await db.select().from(settings)
+    const results = await db.setting.findMany();
+    // select().from(settings)
     const settingsMap: Record<string, string> = {}
-    results.forEach((setting) => {
+    results.forEach((setting: any) => {
       settingsMap[setting.key] = setting.value
-    })
+    });
+
     return settingsMap
   } catch (error) {
     console.error("Error fetching settings:", error)
@@ -132,13 +134,39 @@ export async function updateFaq(id: number, data: any) {
 
 export async function updateSetting(key: string, value: string) {
   try {
-    await db.update(settings).set({ value, updatedAt: getTimestamp() }).where(eq(settings.key, key))
-    revalidatePath("/admin/settings")
-    revalidatePath("/admin/footer")
-    return { success: true }
+    // Verificar se a configuração já existe
+    const existingSetting = await db.setting.findUnique({
+      where: { key }
+    });
+
+    if (existingSetting) {
+      // Se existir, atualizar
+      await db.setting.update({
+        where: { key },
+        data: { 
+          value,
+          updatedAt: new Date()
+        }
+      });
+    } else {
+      // Se não existir, criar nova configuração
+      await db.setting.create({
+        data: {
+          key,
+          value,
+          updatedAt: new Date()
+        }
+      });
+    }
+
+    // Revalidar os caminhos para atualizar a UI
+    revalidatePath("/admin/settings");
+    revalidatePath("/admin/footer");
+    revalidatePath("/"); // Revalidar página inicial onde as logos são exibidas
+    return { success: true };
   } catch (error) {
-    console.error("Error updating setting:", error)
-    return { success: false, error: String(error) }
+    console.error("Error updating setting:", error);
+    return { success: false, error: String(error) };
   }
 }
 
@@ -424,7 +452,7 @@ export async function getImages() {
       }
     });
 
-    // Vamos garantir que todas as propriedades estejam consistentes
+    // Garantir que todas as propriedades estejam consistentes
     const images = dbImages.map(img => ({
       id: img.id,
       name: img.name,
@@ -434,7 +462,6 @@ export async function getImages() {
       updatedAt: img.updatedAt
     }));
 
-    console.log(`Recuperadas ${images.length} imagens do banco de dados`);
     return images;
   } catch (error) {
     console.error("Erro ao buscar imagens:", error)
@@ -462,8 +489,6 @@ export async function uploadImage(formData: FormData) {
     if (file.size > 5 * 1024 * 1024) {
       throw new Error("Arquivo muito grande (máximo 5MB)")
     }
-
-    console.log(`Iniciando upload da imagem ${file.name} (${file.size} bytes)`)
     
     // Fazer upload direto para o Supabase
     try {
@@ -473,20 +498,16 @@ export async function uploadImage(formData: FormData) {
         throw new Error("Falha no upload da imagem para o Supabase")
       }
       
-      console.log(`Upload concluído com sucesso. URL: ${fileUrl}`)
-
       // Salvar o registro no banco de dados com a URL do Supabase
       const newImage = await db.image.create({ 
         data: {
           name: file.name,
           url: fileUrl,  // Esta URL agora é a URL completa do Supabase
           size: file.size,
-          createdAt: getTimestamp(),
-          updatedAt: getTimestamp(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
         },
       })
-      
-      console.log(`Imagem registrada no banco de dados com ID: ${newImage.id}`)
       
       // Revalidar todas as rotas que possam exibir imagens
       revalidatePath("/admin/images")
@@ -507,23 +528,23 @@ export async function uploadImage(formData: FormData) {
 // Function to delete an image
 export async function deleteImage(id: number) {
   try {
-    // Get the image URL from the database
+    // Obter a imagem do banco de dados
     const image = await db.image.findUnique({ where: { id } });
     
     if (image && image.url) {
-      // Extract the path from the Supabase URL
-      // URL format is typically like: https://[project-ref].supabase.co/storage/v1/object/public/images/uploads/filename.jpg
+      // Extrair o caminho do arquivo da URL do Supabase
+      // Formato da URL é geralmente: https://[project-ref].supabase.co/storage/v1/object/public/images/uploads/filename.jpg
       try {
         if (image.url.includes('supabase')) {
-          // Get just the filename part from the URL
+          // Obter apenas o nome do arquivo da URL
           const urlParts = image.url.split('/');
           const fileName = urlParts[urlParts.length - 1];
           const filePath = `uploads/${fileName}`;
           
-          // Import the supabase client
+          // Importar o cliente supabase
           const { supabase } = await import('@/lib/supabase');
           
-          // Delete the file from Supabase storage
+          // Excluir o arquivo do armazenamento do Supabase
           const { error } = await supabase.storage
             .from('images')
             .remove([filePath]);
@@ -537,14 +558,14 @@ export async function deleteImage(id: number) {
       }
     }
 
-    // Delete the record from the database
-    await db.image.delete({where: {id}});
+    // Excluir o registro do banco de dados
+    await db.image.delete({ where: { id } });
 
-    revalidatePath("/admin/images")
-    return { success: true }
+    revalidatePath("/admin/images");
+    return { success: true };
   } catch (error) {
-    console.error("Erro ao excluir imagem:", error)
-    throw error
+    console.error("Erro ao excluir imagem:", error);
+    return { success: false, error: String(error) };
   }
 }
 
