@@ -133,7 +133,6 @@ export function InstitucionalHistoryForm() {
               name="clientsCount"
               value={formData.clientsCount}
               onChange={handleChange}
-              required
             />
           </div>
           <div>
@@ -143,7 +142,6 @@ export function InstitucionalHistoryForm() {
               name="employeesCount"
               value={formData.employeesCount}
               onChange={handleChange}
-              required
             />
           </div>
           <div>
@@ -153,7 +151,6 @@ export function InstitucionalHistoryForm() {
               name="channelsCount"
               value={formData.channelsCount}
               onChange={handleChange}
-              required
             />
           </div>
           <div>
@@ -163,7 +160,6 @@ export function InstitucionalHistoryForm() {
               name="coveragePercent"
               value={formData.coveragePercent}
               onChange={handleChange}
-              required
             />
           </div>
         </div>

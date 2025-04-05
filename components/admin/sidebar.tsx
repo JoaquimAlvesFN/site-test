@@ -19,16 +19,19 @@ import {
   Home,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { logoutAction } from "@/app/admin/actions"
+import { useState } from "react"
+import { useAuth } from "@/lib/auth-context"
 
 export function AdminSidebar() {
   const pathname = usePathname()
   const router = useRouter()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const { user, logout } = useAuth()
 
   const menuItems = [
     {
       title: "Dashboard",
-      href: "/admin",
+      href: "/admin/dashboard",
       icon: <LayoutDashboard className="h-5 w-5" />,
     },
     {
@@ -89,9 +92,20 @@ export function AdminSidebar() {
   ]
 
   async function handleLogout() {
-    await logoutAction()
-    router.push("/admin/login")
-    router.refresh()
+    try {
+      if (isLoggingOut) return; // Evitar múltiplos cliques
+      
+      setIsLoggingOut(true);
+      
+      // Usar a função de logout do contexto
+      await logout();
+      
+      // O redirecionamento é feito dentro da função logout do contexto
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      alert("Erro ao fazer logout. Por favor, tente novamente.");
+      setIsLoggingOut(false);
+    }
   }
 
   return (
@@ -99,6 +113,11 @@ export function AdminSidebar() {
       <div className="p-4 border-b border-[#00205B]/20">
         <h2 className="text-xl font-bold">SKY Pacotes</h2>
         <p className="text-sm text-white/70">Painel Administrativo</p>
+        {user && (
+          <p className="text-xs mt-2 text-white/50 truncate">
+            {user.email}
+          </p>
+        )}
       </div>
 
       <nav className="flex-1 p-4">
@@ -137,9 +156,10 @@ export function AdminSidebar() {
           variant="ghost"
           className="w-full justify-start text-white/70 hover:text-white hover:bg-white/5"
           onClick={handleLogout}
+          disabled={isLoggingOut}
         >
           <LogOut className="h-4 w-4 mr-2" />
-          <span>Sair</span>
+          <span>{isLoggingOut ? "Saindo..." : "Sair"}</span>
         </Button>
       </div>
     </div>

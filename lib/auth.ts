@@ -1,47 +1,68 @@
-// import { cookies } from "next/headers"
+import { supabase } from "./supabase";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 // Fixed admin credentials (in a real app, these would be in the database)
 const ADMIN_USERNAME = "admin"
 const ADMIN_PASSWORD_HASH = "$2b$10$rBJlYSrUhUXIBtIvZlDSJOJMOVBB.JK.vtB5xJJyZOhCnXcXEcKIm" // 'admin123'
 
-export async function login(username: string, password: string) {
-  if (username !== ADMIN_USERNAME) {
-    return { success: false, message: "Usuário inválido" }
+// Verifica se o usuário está autenticado
+export async function isAuthenticated() {
+  try {
+    // Verificar a sessão do usuário usando o Supabase
+    const { data: { session } } = await supabase.auth.getSession();
+    return session !== null;
+  } catch (error) {
+    console.error("Erro ao verificar autenticação:", error);
+    return false;
   }
-
-  // For demo purposes, we'll just check if the password is 'admin123'
-  // In a real app, you would use bcrypt.compare
-  const isValid = password === "admin123"
-
-  if (!isValid) {
-    return { success: false, message: "Senha incorreta" }
-  }
-
-  // Set a session cookie
-  const sessionId = crypto.randomUUID()
-  // cookies().set("session_id", sessionId, {
-  //   httpOnly: true,
-  //   secure: process.env.NODE_ENV === "production",
-  //   maxAge: 60 * 60 * 24, // 1 day
-  //   path: "/",
-  // })
-
-  return { success: true }
 }
 
+// Login com email e senha usando Supabase
+export async function login(email: string, password: string) {
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      return { success: false, message: error.message };
+    }
+
+    // Retorna sucesso se o login for bem-sucedido
+    return { success: true, data };
+  } catch (error) {
+    console.error("Erro ao fazer login:", error);
+    return { success: false, message: "Ocorreu um erro ao tentar fazer login" };
+  }
+}
+
+// Logout usando Supabase
 export async function logout() {
-  // cookies().delete("session_id")
+  try {
+    const { error } = await supabase.auth.signOut();
+    
+    if (error) {
+      console.error("Erro ao fazer logout:", error);
+      return { success: false, message: error.message };
+    }
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Erro ao fazer logout:", error);
+    return { success: false, message: "Ocorreu um erro ao tentar fazer logout" };
+  }
 }
 
-export function isAuthenticated() {
-  // For demo purposes, always return true
-  // In a real app, you would check the session cookie
-  return true
-}
-
-export function requireAuth() {
-  // For demo purposes, we'll skip authentication
-  // In a real app, you would check if the user is authenticated
-  return true
+// Verificação de permissão para rotas protegidas
+export async function requireAuth() {
+  const isLoggedIn = await isAuthenticated();
+  
+  if (!isLoggedIn) {
+    redirect('/admin/login');
+  }
+  
+  return true;
 }
 

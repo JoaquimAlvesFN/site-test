@@ -25,6 +25,8 @@ import { eq } from "drizzle-orm"
 import { getDb } from "@/lib/db"
 import axios from "axios"
 import { uploadImageToSupabase } from "@/lib/supabase"
+import { logout } from "@/lib/auth"
+import { supabase } from "@/lib/supabase"
 
 export async function getAllSettings() {
   try {
@@ -209,9 +211,16 @@ export async function updatePackage(id: number, data: any) {
 }
 
 export async function logoutAction() {
-  // This is a placeholder. The actual logout logic is handled in lib/auth.ts
-  revalidatePath("/admin")
-  return { success: true }
+  try {
+    // Invalidar o cache para garantir que as páginas sejam atualizadas
+    revalidatePath("/admin");
+    revalidatePath("/admin/login");
+    
+    return { success: true };
+  } catch (error) {
+    console.error("Erro ao executar logoutAction:", error);
+    return { success: false };
+  }
 }
 
 export async function deleteHeroSlide(id: number) {
@@ -586,33 +595,63 @@ export async function getCompanyInfo() {
 // Função para atualizar as informações da empresa
 export async function updateCompanyInfo(data: any) {
   try {
-    const existingInfo = await db.companyInfo.findMany()
-
-    if (!existingInfo || existingInfo.length === 0) {
-      // Se não existir, criar um novo registro
-      await db.companyInfo.create({
-        data: {
-          ...data,
-          updatedAt: getTimestamp(),
-        }
-      });
-    } else {
-      // Se existir, atualizar o registro existente
-      await db.companyInfo.update({
-        where: { id: existingInfo[0].id },
-        data: {
-          ...data,
-          updatedAt: getTimestamp(),
-        }
-      });
+    // Validar os dados recebidos
+    if (!data) {
+      throw new Error("Dados inválidos")
     }
 
+    // Preparar os dados para salvar
+    const companyData = {
+      aboutTitle: data.aboutTitle || "",
+      aboutDescription: data.aboutDescription || "",
+      aboutDescription2: data.aboutDescription2 || "", 
+      clientsCount: data.clientsCount || "",
+      employeesCount: data.employeesCount || "",
+      channelsCount: data.channelsCount || "",
+      coveragePercent: data.coveragePercent || "",
+      heroImage: data.heroImage,
+      heroImageAlt: data.heroImageAlt,
+      heroImageCaption: data.heroImageCaption,
+      heroImageLocation: data.heroImageLocation,
+      updatedAt: new Date()
+    }
+
+    // Buscar registro existente
+    const existingInfo = await db.companyInfo.findFirst()
+
+    if (!existingInfo) {
+      // Criar novo registro
+      const result = await db.companyInfo.create({
+        data: companyData
+      })
+      
+      if (!result) {
+        throw new Error("Erro ao criar registro")
+      }
+    } else {
+      // Atualizar registro existente
+      const result = await db.companyInfo.update({
+        where: { id: existingInfo.id },
+        data: companyData
+      })
+
+      if (!result) {
+        throw new Error("Erro ao atualizar registro") 
+      }
+    }
+
+    // Revalidar páginas
     revalidatePath("/admin/institucional")
     revalidatePath("/institucional")
+
     return { success: true }
+
   } catch (error) {
-    console.error("Error updating company info:", error)
-    return { success: false }
+    console.error("Erro ao atualizar informações da empresa:", error)
+    return { 
+      success: false,
+      error: error instanceof Error ? error.message : "Erro desconhecido"
+    }
   }
 }
 

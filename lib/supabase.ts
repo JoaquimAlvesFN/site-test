@@ -4,7 +4,36 @@ import { createClient } from '@supabase/supabase-js';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(supabaseUrl, supabaseKey);
+// Log para debug quando o cliente é inicializado
+if (!supabaseUrl || !supabaseKey) {
+  console.error('Erro: Credenciais do Supabase não definidas! Verifique as variáveis de ambiente NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.');
+} else {
+  console.log(`Inicializando cliente Supabase com URL: ${supabaseUrl.substring(0, 15)}...`);
+}
+
+// Criar o cliente Supabase com persistência de sessão
+export const supabase = createClient(supabaseUrl, supabaseKey, {
+  auth: {
+    persistSession: true,
+    detectSessionInUrl: true,
+    autoRefreshToken: true,
+  }
+});
+
+// Helper function para verificar o status de autenticação
+export async function getSessionInfo() {
+  try {
+    const { data, error } = await supabase.auth.getSession();
+    if (error) {
+      console.error('Erro ao obter sessão:', error);
+      return null;
+    }
+    return data.session;
+  } catch (error) {
+    console.error('Erro ao verificar sessão:', error);
+    return null;
+  }
+}
 
 // Function to upload image to Supabase Storage
 export async function uploadImageToSupabase(file: File): Promise<string | null> {

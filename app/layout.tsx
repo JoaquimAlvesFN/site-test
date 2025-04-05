@@ -1,9 +1,20 @@
 import type { Metadata } from 'next'
-import './globals.css'
+import { Inter as FontSans } from 'next/font/google'
+import '@/app/globals.css'
+import { cn } from '@/lib/utils'
+import { AuthProvider } from '@/lib/auth-context'
+
+const fontSans = FontSans({
+  subsets: ['latin'],
+  variable: '--font-sans',
+})
 
 export const metadata: Metadata = {
-  title: 'Ligcel SKY',
-  description: 'Ligcel SKY',
+  title: {
+    template: '%s | SKY Pacotes',
+    default: 'SKY Pacotes - A melhor programação para você',
+  },
+  description: 'Conheça as melhores ofertas e pacotes da SKY. Internet banda larga e TV por assinatura de qualidade.',
 }
 
 export default function RootLayout({
@@ -12,8 +23,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={cn('min-h-screen bg-white font-sans antialiased', fontSans.variable)}>
+        <AuthProvider>
+          {children}
+        </AuthProvider>
+      </body>
     </html>
   )
 }

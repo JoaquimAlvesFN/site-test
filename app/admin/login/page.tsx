@@ -1,56 +1,85 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuth } from "@/lib/auth-context"
 
 export default function LoginPage() {
   const router = useRouter()
-  const [username, setUsername] = useState("")
+  const { login, isAuthenticated, isLoading } = useAuth()
+  const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Redirecionar se já estiver autenticado
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log("Usuário já autenticado, redirecionando para dashboard");
+      router.replace("/admin");
+    }
+  }, [isAuthenticated, router]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    setIsLoading(true)
+    setIsSubmitting(true)
     setError("")
 
     try {
-      // For demo purposes, we'll just check if the username is 'admin' and password is 'admin123'
-      if (username === "admin" && password === "admin123") {
-        router.push("/admin")
-        router.refresh()
-        return
+      // Usar a função de login do contexto
+      const result = await login(email, password);
+
+      if (!result.success) {
+        setError(result.error || "Falha ao fazer login");
+        setIsSubmitting(false);
+        return;
       }
 
-      setError("Credenciais inválidas")
+      console.log("Login bem-sucedido, redirecionando para dashboard...");
+      router.replace("/admin");
     } catch (err) {
-      setError("Ocorreu um erro ao tentar fazer login")
-      console.error(err)
-    } finally {
-      setIsLoading(false)
+      console.error("Erro ao fazer login:", err);
+      setError("Ocorreu um erro ao tentar fazer login");
+      setIsSubmitting(false);
     }
+  }
+  
+  // Mostrar spinner enquanto verifica autenticação
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-100">
+        <div className="text-center">
+          <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando autenticação...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-slate-100">
+    <div className="min-h-screen flex items-center justify-center bg-slate-100 p-4">
       <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle className="text-2xl">Área Administrativa</CardTitle>
-          <CardDescription>Faça login para gerenciar o conteúdo do site SKY Pacotes</CardDescription>
+        <CardHeader className="space-y-1">
+          <CardTitle className="text-2xl font-bold">Login Administrativo</CardTitle>
+          <CardDescription>Entre com suas credenciais para acessar o painel administrativo</CardDescription>
         </CardHeader>
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">{error}</div>}
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="username">Usuário</Label>
-              <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} required />
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="admin@exemplo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Senha</Label>
@@ -62,22 +91,17 @@ export default function LoginPage() {
                 required
               />
             </div>
-            <div className="text-sm text-muted-foreground">
-              <p>Para o demo, use:</p>
-              <p>
-                Usuário: <strong>admin</strong>
-              </p>
-              <p>
-                Senha: <strong>admin123</strong>
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? "Entrando..." : "Entrar"}
+            {error && <p className="text-sm font-medium text-red-500">{error}</p>}
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Entrando..." : "Entrar"}
             </Button>
-          </CardFooter>
-        </form>
+          </form>
+        </CardContent>
+        <CardFooter className="border-t px-6 py-4">
+          <p className="text-sm text-muted-foreground">
+            Este é um painel administrativo protegido. Apenas usuários autorizados podem acessar.
+          </p>
+        </CardFooter>
       </Card>
     </div>
   )
