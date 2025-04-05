@@ -1,15 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These values should be in your .env.local file
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-// Log para debug quando o cliente é inicializado
-if (!supabaseUrl || !supabaseKey) {
-  console.error('Erro: Credenciais do Supabase não definidas! Verifique as variáveis de ambiente NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.');
-} else {
-  console.log(`Inicializando cliente Supabase com URL: ${supabaseUrl.substring(0, 15)}...`);
-}
+const supabaseUrl = process.env.SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_KEY || '';
 
 // Criar o cliente Supabase com persistência de sessão
 export const supabase = createClient(supabaseUrl, supabaseKey, {
