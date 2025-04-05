@@ -53,6 +53,7 @@ export async function getContacts() {
     
     // Verificar se a tabela contact existe no banco antes de tentar buscar
     try {
+      console.log("Buscando contatos");
       const contactsData = await db.contact.findMany({
         orderBy: { createdAt: 'desc' }
       });

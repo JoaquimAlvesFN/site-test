@@ -2,28 +2,60 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { toast } from "@/components/ui/use-toast"
+import { getCompanyInfo, updateCompanyInfo } from "@/app/admin/actions"
 
 export function InstitucionalHistoryForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Dados de exemplo para o formulário
+  // Estado para os dados do formulário
   const [formData, setFormData] = useState({
-    aboutTitle: "Quem Somos",
-    aboutDescription:
-      "A SKY Brasil é uma empresa de telecomunicações que oferece serviços de TV por assinatura via satélite e internet banda larga. Fundada em 1996, a empresa se consolidou como líder no mercado brasileiro, atendendo milhões de clientes em todo o país.",
-    aboutDescription2:
-      "Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do Brasil, incluindo áreas remotas onde outras tecnologias não chegam.",
-    clientsCount: "12 milhões",
-    employeesCount: "5 mil",
-    channelsCount: "200",
-    coveragePercent: "100",
+    aboutTitle: "",
+    aboutDescription: "",
+    aboutDescription2: "",
+    clientsCount: "",
+    employeesCount: "",
+    channelsCount: "",
+    coveragePercent: "",
   })
+
+  // Carregar dados existentes do banco de dados
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const data = await getCompanyInfo()
+        
+        if (data) {
+          setFormData({
+            aboutTitle: data.aboutTitle || "",
+            aboutDescription: data.aboutDescription || "",
+            aboutDescription2: data.aboutDescription2 || "",
+            clientsCount: data.clientsCount || "",
+            employeesCount: data.employeesCount || "",
+            channelsCount: data.channelsCount || "",
+            coveragePercent: data.coveragePercent || "",
+          })
+        }
+      } catch (error) {
+        console.error("Erro ao carregar informações:", error)
+        toast({
+          title: "Erro ao carregar dados",
+          description: "Ocorreu um erro ao carregar as informações.",
+          variant: "destructive",
+        })
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
     const { name, value } = e.target
@@ -35,13 +67,17 @@ export function InstitucionalHistoryForm() {
     setIsSubmitting(true)
 
     try {
-      // Simulação de envio de dados
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Enviar dados para o banco usando a server action
+      const result = await updateCompanyInfo(formData)
 
-      toast({
-        title: "Informações salvas com sucesso!",
-        description: "As informações da página institucional foram atualizadas.",
-      })
+      if (result && result.success) {
+        toast({
+          title: "Informações salvas com sucesso!",
+          description: "As informações da página institucional foram atualizadas.",
+        })
+      } else {
+        throw new Error("Falha ao salvar informações")
+      }
     } catch (error) {
       console.error("Erro ao salvar informações:", error)
       toast({
@@ -52,6 +88,10 @@ export function InstitucionalHistoryForm() {
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (isLoading) {
+    return <div className="flex justify-center p-8">Carregando...</div>
   }
 
   return (

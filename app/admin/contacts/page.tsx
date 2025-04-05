@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { getContacts } from "@/app/actions"
+import { getContacts, updateContactStatus } from "@/app/actions"
 import { ContactStatusBadge } from "@/components/admin/contact-status-badge"
 import { ContactStatusSelect } from "@/components/admin/contact-status-select"
 import { ContactFilters, type ContactFilters as ContactFiltersType } from "@/components/admin/contact-filters"
@@ -12,11 +12,14 @@ interface Contact {
   id: number;
   name: string;
   phone: string;
-  email?: string;
+  email?: string | null;
   cep: string;
   interest: string;
   status: string;
-  createdAt: string;
+  createdAt: string | Date;
+  updatedAt?: string | Date;
+  packageId?: number | null;
+  notes?: string | null;
 }
 
 export default function ContactsPage() {
@@ -31,28 +34,27 @@ export default function ContactsPage() {
     status: "pending",
   })
 
-  // Função simples e segura para buscar dados
+  // Função segura para buscar dados
   async function fetchData() {
     setIsLoading(true);
+    setError(null);
+    
     try {
       const data = await getContacts();
       
-      // Verificar se temos um array válido com dados
-      if (Array.isArray(data)) {
-        setContacts(data);
-        
-        // Verificar se há dados para filtrar
-        if (data.length > 0) {
-          // Filtrar inicialmente apenas os pendentes
-          const pendingOnly = data.filter(c => c && c.status === "pending");
-          setFilteredContacts(pendingOnly);
-        } else {
-          // Banco de dados vazio - não há contatos para mostrar
-          setFilteredContacts([]);
-          console.log("Banco de dados vazio - não há contatos cadastrados");
-        }
+      // Garantir que data é um array válido
+      const safeData = Array.isArray(data) ? data.filter(contact => contact !== null && contact !== undefined) : [];
+      
+      setContacts(safeData);
+      
+      // Aplicar filtros depois de obter dados
+      if (safeData.length > 0) {
+        const initialFiltered = safeData.filter(contact => 
+          activeFilters.status ? contact.status === activeFilters.status : true
+        );
+        setFilteredContacts(initialFiltered);
       } else {
-        throw new Error("Dados inválidos recebidos da API");
+        setFilteredContacts([]);
       }
     } catch (err) {
       console.error("Erro ao buscar contatos:", err);
@@ -64,26 +66,26 @@ export default function ContactsPage() {
     }
   }
 
-  // Carregar dados apenas uma vez ao montar o componente
+  // Carregar dados ao montar o componente
   useEffect(() => {
     fetchData();
   }, []);
 
-  // Função simplificada de filtro
+  // Função de filtro melhorada
   const handleFilterChange = (filters: ContactFiltersType) => {
     setActiveFilters(filters);
     
-    if (!contacts.length) {
+    if (!contacts || !contacts.length) {
       setFilteredContacts([]);
       return;
     }
     
     const filtered = contacts.filter(contact => {
-      // Skip invalid contacts
+      // Garantir que contact existe
       if (!contact) return false;
       
       // Nome
-      if (filters.name && !String(contact.name).toLowerCase().includes(filters.name.toLowerCase())) {
+      if (filters.name && !String(contact.name || "").toLowerCase().includes(filters.name.toLowerCase())) {
         return false;
       }
       
@@ -96,7 +98,7 @@ export default function ContactsPage() {
       }
       
       // Telefone
-      if (filters.phone && !String(contact.phone).includes(filters.phone)) {
+      if (filters.phone && !String(contact.phone || "").includes(filters.phone)) {
         return false;
       }
       
@@ -111,7 +113,37 @@ export default function ContactsPage() {
     setFilteredContacts(filtered);
   };
 
-  // Contadores de status
+  // Manipulador seguro para mudança de status
+  const handleStatusChange = async (contactId: number, newStatus: string) => {
+    try {
+      // Tentar atualizar no servidor primeiro
+      const success = await updateContactStatus(contactId, newStatus);
+      
+      if (!success) {
+        throw new Error("Falha ao atualizar status no servidor");
+      }
+      
+      // Atualizar estado local apenas se a atualização no servidor foi bem-sucedida
+      const updatedContacts = contacts.map(c => 
+        c && c.id === contactId ? {...c, status: newStatus} : c
+      );
+      
+      setContacts(updatedContacts);
+      
+      // Atualizar a visualização filtrada
+      if (activeFilters.status && activeFilters.status !== newStatus) {
+        setFilteredContacts(prev => prev.filter(c => c.id !== contactId));
+      } else {
+        handleFilterChange(activeFilters);
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar status:", error);
+      // Mostrar mensagem de erro para o usuário
+      alert("Não foi possível atualizar o status. Tente novamente.");
+    }
+  };
+
+  // Contadores de status com verificação segura
   const countsByStatus = {
     total: contacts.length,
     pending: contacts.filter(c => c && c.status === "pending").length,
@@ -268,52 +300,39 @@ export default function ContactsPage() {
                 <tbody>
                   {filteredContacts.map((contact) => (
                     <tr key={contact.id} className="border-b hover:bg-slate-50">
-                      <td className="py-3 px-4">{contact.name}</td>
-                      <td className="py-3 px-4">{contact.phone}</td>
+                      <td className="py-3 px-4">{contact.name || "-"}</td>
+                      <td className="py-3 px-4">{contact.phone || "-"}</td>
                       <td className="py-3 px-4">{contact.email || "-"}</td>
-                      <td className="py-3 px-4">{contact.cep}</td>
+                      <td className="py-3 px-4">{contact.cep || "-"}</td>
                       <td className="py-3 px-4">
                         {contact.interest === "tv"
                           ? "TV por Assinatura"
                           : contact.interest === "internet"
                             ? "Internet"
-                            : "Combo (TV + Internet)"}
+                            : contact.interest === "combo"
+                              ? "Combo (TV + Internet)"
+                              : contact.interest || "-"}
                       </td>
                       <td className="py-3 px-4">
                         {(() => {
                           try {
-                            return new Date(contact.createdAt).toLocaleDateString("pt-BR");
+                            const date = new Date(contact.createdAt);
+                            return isNaN(date.getTime()) 
+                              ? "-" 
+                              : date.toLocaleDateString("pt-BR");
                           } catch (e) {
-                            return "Data inválida";
+                            return "-";
                           }
                         })()}
                       </td>
                       <td className="py-3 px-4">
-                        <ContactStatusBadge status={contact.status} />
+                        <ContactStatusBadge status={contact.status || "pending"} />
                       </td>
                       <td className="py-3 px-4 text-right">
                         <ContactStatusSelect
                           contactId={contact.id}
-                          currentStatus={contact.status}
-                          onStatusChange={(newStatus) => {
-                            try {
-                              // Atualiza localmente
-                              const updatedContacts = contacts.map(c => 
-                                c.id === contact.id ? {...c, status: newStatus} : c
-                              );
-                              
-                              setContacts(updatedContacts);
-                              
-                              // Atualiza a visualização filtrada
-                              if (activeFilters.status && activeFilters.status !== newStatus) {
-                                setFilteredContacts(prev => prev.filter(c => c.id !== contact.id));
-                              } else {
-                                handleFilterChange(activeFilters);
-                              }
-                            } catch (error) {
-                              console.error("Erro ao atualizar status:", error);
-                            }
-                          }}
+                          currentStatus={contact.status || "pending"}
+                          onStatusChange={(newStatus) => handleStatusChange(contact.id, newStatus)}
                         />
                       </td>
                     </tr>

@@ -574,79 +574,37 @@ export async function deleteImage(id: number) {
 // Função para obter as informações da empresa
 export async function getCompanyInfo() {
   try {
-    const result = await db.select().from(companyInfo)
-
-    if (!result || result.length === 0) {
-      // Retornar dados padrão se não houver registros
-      return {
-        id: 0,
-        aboutTitle: "Quem Somos",
-        aboutDescription:
-          "A SKY Brasil é uma empresa de telecomunicações que oferece serviços de TV por assinatura via satélite e internet banda larga. Fundada em 1996, a empresa se consolidou como líder no mercado brasileiro, atendendo milhões de clientes em todo o país.",
-        aboutDescription2:
-          "Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do Brasil, incluindo áreas remotas onde outras tecnologias não chegam.",
-        clientsCount: "12 milhões",
-        employeesCount: "5 mil",
-        channelsCount: "200",
-        coveragePercent: "100",
-        heroTitle: "Transformando o entretenimento brasileiro desde 1996",
-        heroSubtitle:
-          "Líder em TV por assinatura via satélite no Brasil, oferecendo a melhor experiência em entretenimento para milhões de famílias.",
-        heroImage: "/placeholder.svg?height=600&width=800",
-        heroImageAlt: "SKY Sede",
-        heroImageCaption: "Sede SKY Brasil",
-        heroImageLocation: "São Paulo, SP",
-        updatedAt: getTimestamp(),
-      }
-    }
-
+    const result = await db.companyInfo.findMany()
     return result[0]
   } catch (error) {
     console.error("Error fetching company info:", error)
     // Retornar dados padrão em caso de erro
-    return {
-      id: 0,
-      aboutTitle: "Quem Somos",
-      aboutDescription:
-        "A SKY Brasil é uma empresa de telecomunicações que oferece serviços de TV por assinatura via satélite e internet banda larga. Fundada em 1996, a empresa se consolidou como líder no mercado brasileiro, atendendo milhões de clientes em todo o país.",
-        aboutDescription2:
-          "Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do Brasil, incluindo áreas remotas onde outras tecnologias não chegam.",
-        clientsCount: "12 milhões",
-        employeesCount: "5 mil",
-        channelsCount: "200",
-        coveragePercent: "100",
-        heroTitle: "Transformando o entretenimento brasileiro desde 1996",
-        heroSubtitle:
-          "Líder em TV por assinatura via satélite no Brasil, oferecendo a melhor experiência em entretenimento para milhões de famílias.",
-        heroImage: "/placeholder.svg?height=600&width=800",
-        heroImageAlt: "SKY Sede",
-        heroImageCaption: "Sede SKY Brasil",
-        heroImageLocation: "São Paulo, SP",
-        updatedAt: getTimestamp(),
-    }
+    return null;
   }
 }
 
 // Função para atualizar as informações da empresa
 export async function updateCompanyInfo(data: any) {
   try {
-    const existingInfo = await db.select().from(companyInfo)
+    const existingInfo = await db.companyInfo.findMany()
 
     if (!existingInfo || existingInfo.length === 0) {
       // Se não existir, criar um novo registro
-      await db.insert(companyInfo).values({
-        ...data,
-        updatedAt: getTimestamp(),
-      })
-    } else {
-      // Se existir, atualizar o registro existente
-      await db
-        .update(companyInfo)
-        .set({
+      await db.companyInfo.create({
+        data: {
           ...data,
           updatedAt: getTimestamp(),
-        })
-        .where(eq(companyInfo.id, existingInfo[0].id))
+        }
+      });
+    } else {
+      // Se existir, atualizar o registro existente
+      await db.companyInfo.update({
+        where: { id: existingInfo[0].id },
+        data: {
+          ...data,
+          updatedAt: getTimestamp(),
+        }
+      });
     }
 
     revalidatePath("/admin/institucional")
@@ -792,7 +750,10 @@ export async function deleteCompanyValue(id: number) {
 // Função para obter os marcos históricos da empresa
 export async function getCompanyHistory() {
   try {
-    const result = await db.select().from(companyHistory).orderBy(companyHistory.order)
+    const result = await db.companyHistory.findMany({
+      orderBy: (companyHistory, { asc, desc }) => [asc(companyHistory.order)],
+    })
+    // .select().from(companyHistory).orderBy(companyHistory.order)
 
     if (!result || result.length === 0) {
       // Retornar dados padrão se não houver registros
@@ -926,10 +887,16 @@ export async function getCompanyHistory() {
 // Função para criar um marco histórico da empresa
 export async function createCompanyHistory(data: any) {
   try {
-    await db.insert(companyHistory).values({
-      ...data,
-      updatedAt: getTimestamp(),
+    await db.companyHistory.create({
+      data: {
+        ...data,
+        updatedAt: getTimestamp(),
+      },
     })
+    // await db.insert(companyHistory).values({
+    //   ...data,
+    //   updatedAt: getTimestamp(),
+    // })
 
     revalidatePath("/admin/institucional")
     revalidatePath("/institucional")
@@ -943,13 +910,20 @@ export async function createCompanyHistory(data: any) {
 // Função para atualizar um marco histórico da empresa
 export async function updateCompanyHistory(id: number, data: any) {
   try {
-    await db
-      .update(companyHistory)
-      .set({
+    await db.companyHistory.update({
+      where: { id },
+      data: {
         ...data,
         updatedAt: getTimestamp(),
-      })
-      .where(eq(companyHistory.id, id))
+      },
+    })
+    // await db
+    //   .update(companyHistory)
+    //   .set({
+    //     ...data,
+    //     updatedAt: getTimestamp(),
+    //   })
+    //   .where(eq(companyHistory.id, id))
 
     revalidatePath("/admin/institucional")
     revalidatePath("/institucional")
@@ -1144,7 +1118,9 @@ export async function deleteTeamMember(id: number) {
 // Função para obter as instalações da empresa
 export async function getCompanyFacilities() {
   try {
-    const result = await db.select().from(companyFacilities).orderBy(companyFacilities.order)
+    const result = await db.companyFacilities.findMany({
+      orderBy: (companyFacilities, { asc, desc }) => [asc(companyFacilities.order)],
+    })
 
     if (!result || result.length === 0) {
       // Retornar dados padrão se não houver registros
@@ -1284,10 +1260,16 @@ export async function getCompanyFacilities() {
 // Função para criar uma instalação da empresa
 export async function createCompanyFacility(data: any) {
   try {
-    await db.insert(companyFacilities).values({
-      ...data,
-      updatedAt: getTimestamp(),
+    await db.companyFacilities.create({
+      data: {
+        ...data,
+        updatedAt: getTimestamp(),
+      },
     })
+    // await db.insert(companyFacilities).values({
+    //   ...data,
+    //   updatedAt: getTimestamp(),
+    // })
 
     revalidatePath("/admin/institucional")
     revalidatePath("/institucional")
@@ -1301,13 +1283,20 @@ export async function createCompanyFacility(data: any) {
 // Função para atualizar uma instalação da empresa
 export async function updateCompanyFacility(id: number, data: any) {
   try {
-    await db
-      .update(companyFacilities)
-      .set({
+    await db.companyFacilities.update({
+      where: { id },
+      data: {
         ...data,
         updatedAt: getTimestamp(),
-      })
-      .where(eq(companyFacilities.id, id))
+      },
+    })
+    // await db
+    //   .update(companyFacilities)
+    //   .set({
+    //     ...data,
+    //     updatedAt: getTimestamp(),
+    //   })
+    //   .where(eq(companyFacilities.id, id))
 
     revalidatePath("/admin/institucional")
     revalidatePath("/institucional")
@@ -1321,7 +1310,10 @@ export async function updateCompanyFacility(id: number, data: any) {
 // Função para excluir uma instalação da empresa
 export async function deleteCompanyFacility(id: number) {
   try {
-    await db.delete(companyFacilities).where(eq(companyFacilities.id, id))
+    await db.companyFacilities.delete({
+      where: { id },
+    })
+    // await db.delete(companyFacilities).where(eq(companyFacilities.id, id))
 
     revalidatePath("/admin/institucional")
     revalidatePath("/institucional")

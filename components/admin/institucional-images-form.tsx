@@ -2,23 +2,44 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { toast } from "@/components/ui/use-toast"
 import { ImageSelector } from "./image-selector"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { 
+  getCompanyInfo, 
+  updateCompanyInfo, 
+  getCompanyFacilities, 
+  updateCompanyFacility,
+  getAllSettings,
+  updateSetting
+} from "@/app/admin/actions"
+
+// Define facility type based on the database model
+type Facility = {
+  id: number
+  image: string
+  alt: string
+  title: string
+  location: string
+  order: number
+  active: boolean
+  updatedAt: string
+}
 
 export function InstitucionalImagesForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  // Dados de exemplo para o formulário
+  // State data for the form
   const [heroImages, setHeroImages] = useState({
-    mainImage: "/placeholder.svg?height=600&width=800",
-    mainImageAlt: "SKY Sede",
-    mainImageCaption: "Sede SKY Brasil",
-    mainImageLocation: "São Paulo, SP",
+    heroImage: "/placeholder.svg?height=600&width=800",
+    heroImageAlt: "SKY Sede",
+    heroImageCaption: "Sede SKY Brasil",
+    heroImageLocation: "São Paulo, SP",
   })
 
   const [aboutImages, setAboutImages] = useState({
@@ -30,50 +51,57 @@ export function InstitucionalImagesForm() {
     image3Alt: "Central de Operações SKY",
   })
 
-  const [facilitiesImages, setFacilitiesImages] = useState([
-    {
-      id: 1,
-      image: "/placeholder.svg?height=400&width=600",
-      alt: "Sede Corporativa",
-      title: "Sede Corporativa",
-      location: "São Paulo, SP",
-    },
-    {
-      id: 2,
-      image: "/placeholder.svg?height=400&width=600",
-      alt: "Centro de Operações",
-      title: "Centro de Operações",
-      location: "Rio de Janeiro, RJ",
-    },
-    {
-      id: 3,
-      image: "/placeholder.svg?height=400&width=600",
-      alt: "Centro de Distribuição",
-      title: "Centro de Distribuição",
-      location: "Barueri, SP",
-    },
-    {
-      id: 4,
-      image: "/placeholder.svg?height=400&width=600",
-      alt: "Centro de Tecnologia",
-      title: "Centro de Tecnologia",
-      location: "Campinas, SP",
-    },
-    {
-      id: 5,
-      image: "/placeholder.svg?height=400&width=600",
-      alt: "Central de Atendimento",
-      title: "Central de Atendimento",
-      location: "Salvador, BA",
-    },
-    {
-      id: 6,
-      image: "/placeholder.svg?height=400&width=600",
-      alt: "Escritório Regional",
-      title: "Escritório Regional",
-      location: "Recife, PE",
-    },
-  ])
+  const [facilitiesImages, setFacilitiesImages] = useState<Facility[]>([])
+
+  // Fetch data from the database on component mount
+  useEffect(() => {
+    async function loadData() {
+      try {
+        // Fetch company info
+        const companyInfoData = await getCompanyInfo()
+        
+        if (companyInfoData) {
+          setHeroImages({
+            heroImage: companyInfoData.heroImage || "/placeholder.svg?height=600&width=800",
+            heroImageAlt: companyInfoData.heroImageAlt || "SKY Sede",
+            heroImageCaption: companyInfoData.heroImageCaption || "Sede SKY Brasil",
+            heroImageLocation: companyInfoData.heroImageLocation || "São Paulo, SP",
+          })
+        }
+
+        // Fetch about section images from settings
+        const settingsData = await getAllSettings()
+        if (settingsData) {
+          setAboutImages({
+            image1: settingsData.aboutImage1 || "/placeholder.svg?height=300&width=300",
+            image1Alt: settingsData.aboutImage1Alt || "Escritório SKY",
+            image2: settingsData.aboutImage2 || "/placeholder.svg?height=300&width=300",
+            image2Alt: settingsData.aboutImage2Alt || "Equipe SKY",
+            image3: settingsData.aboutImage3 || "/placeholder.svg?height=620&width=300",
+            image3Alt: settingsData.aboutImage3Alt || "Central de Operações SKY",
+          })
+        }
+
+        // Fetch facilities
+        const facilitiesData = await getCompanyFacilities()
+        if (facilitiesData && facilitiesData.length > 0) {
+          setFacilitiesImages(facilitiesData)
+        }
+
+        setIsLoading(false)
+      } catch (error) {
+        console.error("Error loading institutional data:", error)
+        toast({
+          title: "Erro ao carregar dados",
+          description: "Não foi possível carregar as informações institucionais.",
+          variant: "destructive",
+        })
+        setIsLoading(false)
+      }
+    }
+
+    loadData()
+  }, [])
 
   function handleHeroChange(field: string, value: string) {
     setHeroImages((prev) => ({ ...prev, [field]: value }))
@@ -94,8 +122,37 @@ export function InstitucionalImagesForm() {
     setIsSubmitting(true)
 
     try {
-      // Simulação de envio de dados
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      // Update company info for hero section if values exist
+      const heroData: any = {}
+      if (heroImages.heroImage) heroData.heroImage = heroImages.heroImage
+      if (heroImages.heroImageAlt) heroData.heroImageAlt = heroImages.heroImageAlt
+      if (heroImages.heroImageCaption) heroData.heroImageCaption = heroImages.heroImageCaption
+      if (heroImages.heroImageLocation) heroData.heroImageLocation = heroImages.heroImageLocation
+      
+      if (Object.keys(heroData).length > 0) {
+        await updateCompanyInfo(heroData)
+      }
+
+      // Save about section images to settings if they exist
+      if (aboutImages.image1) await updateSetting("aboutImage1", aboutImages.image1)
+      if (aboutImages.image1Alt) await updateSetting("aboutImage1Alt", aboutImages.image1Alt)
+      if (aboutImages.image2) await updateSetting("aboutImage2", aboutImages.image2) 
+      if (aboutImages.image2Alt) await updateSetting("aboutImage2Alt", aboutImages.image2Alt)
+      if (aboutImages.image3) await updateSetting("aboutImage3", aboutImages.image3)
+      if (aboutImages.image3Alt) await updateSetting("aboutImage3Alt", aboutImages.image3Alt)
+
+      // Update each facility if it has data
+      for (const facility of facilitiesImages) {
+        const facilityData: any = {}
+        if (facility.image) facilityData.image = facility.image
+        if (facility.alt) facilityData.alt = facility.alt
+        if (facility.title) facilityData.title = facility.title
+        if (facility.location) facilityData.location = facility.location
+
+        if (Object.keys(facilityData).length > 0) {
+          await updateCompanyFacility(facility.id, facilityData)
+        }
+      }
 
       toast({
         title: "Imagens salvas com sucesso!",
@@ -104,13 +161,17 @@ export function InstitucionalImagesForm() {
     } catch (error) {
       console.error("Erro ao salvar imagens:", error)
       toast({
-        title: "Erro ao salvar",
+        title: "Erro ao salvar", 
         description: "Ocorreu um erro ao salvar as imagens.",
         variant: "destructive",
       })
     } finally {
       setIsSubmitting(false)
     }
+  }
+
+  if (isLoading) {
+    return <div className="flex justify-center p-8">Carregando...</div>
   }
 
   return (
@@ -125,36 +186,36 @@ export function InstitucionalImagesForm() {
         <TabsContent value="hero" className="space-y-4">
           <div>
             <Label>Imagem Principal</Label>
-            <ImageSelector value={heroImages.mainImage} onChange={(value) => handleHeroChange("mainImage", value)} />
+            <ImageSelector value={heroImages.heroImage} onChange={(value) => handleHeroChange("heroImage", value)} />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
-              <Label htmlFor="mainImageAlt">Texto Alternativo</Label>
+              <Label htmlFor="heroImageAlt">Texto Alternativo</Label>
               <Input
-                id="mainImageAlt"
-                value={heroImages.mainImageAlt}
-                onChange={(e) => handleHeroChange("mainImageAlt", e.target.value)}
+                id="heroImageAlt"
+                value={heroImages.heroImageAlt}
+                onChange={(e) => handleHeroChange("heroImageAlt", e.target.value)}
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="mainImageCaption">Legenda</Label>
+              <Label htmlFor="heroImageCaption">Legenda</Label>
               <Input
-                id="mainImageCaption"
-                value={heroImages.mainImageCaption}
-                onChange={(e) => handleHeroChange("mainImageCaption", e.target.value)}
+                id="heroImageCaption"
+                value={heroImages.heroImageCaption}
+                onChange={(e) => handleHeroChange("heroImageCaption", e.target.value)}
                 required
               />
             </div>
 
             <div>
-              <Label htmlFor="mainImageLocation">Localização</Label>
+              <Label htmlFor="heroImageLocation">Localização</Label>
               <Input
-                id="mainImageLocation"
-                value={heroImages.mainImageLocation}
-                onChange={(e) => handleHeroChange("mainImageLocation", e.target.value)}
+                id="heroImageLocation"
+                value={heroImages.heroImageLocation}
+                onChange={(e) => handleHeroChange("heroImageLocation", e.target.value)}
                 required
               />
             </div>

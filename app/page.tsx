@@ -276,10 +276,6 @@ export default async function Home() {
           </div>
         </section>
 
-        <Suspense fallback={<div>Carregando...</div>}>
-          <BusinessSection />
-        </Suspense>
-
         <section className="py-16 bg-slate-50">
           <div className="container">
             <div className="text-center mb-12">
