@@ -48,7 +48,7 @@ export default async function Home() {
             <Link href="/" className="flex items-center space-x-2">
               <DynamicLogo
                 type="header"
-                fallbackSrc="https://sjc.microlink.io/EVPkxg5JrNWxZNP9AWwi5KRkyc0EaklEAI0j6mP3BLANnvCK51AwejCcuTRPp1RtaCoUH-vI4pLeAn4KL4YmWQ.jpeg"
+                fallbackSrc={"/logo.png"}
               />
             </Link>
             <nav className="hidden md:flex gap-6">
