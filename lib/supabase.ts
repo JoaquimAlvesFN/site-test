@@ -1,8 +1,15 @@
+import getConfig from 'next/config';
 import { createClient } from '@supabase/supabase-js';
+import { getEnv } from './env';
+// const { SUPABASE_URL, SUPABASE_ANON_KEY } = getConfig().serverRuntimeConfig;
 
 // These values should be in your .env.local file
-const supabaseUrl = process.env.SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_KEY || '';
+const supabaseUrl = process.env.SUPABASE_URL! || 'https://ztqhvowfpnzlpequcjfc.supabase.co';
+const supabaseKey = process.env.SUPABASE_ANON_KEY! || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0cWh2b3dmcG56bHBlcXVjamZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzNzQ2MjAsImV4cCI6MjA0Nzk1MDYyMH0.hVDbKpp4qQ1IsoY6V4HJckmOPwBOHpiCSm59aBEvyYg';
+
+if (!supabaseUrl || !supabaseKey) {
+  throw new Error('As variáveis de ambiente SUPABASE_URL e SUPABASE_SERVICE_KEY não estão configuradas.');
+}
 
 // Criar o cliente Supabase com persistência de sessão
 export const supabase = createClient(supabaseUrl, supabaseKey, {
@@ -41,15 +48,13 @@ export async function uploadImageToSupabase(file: File): Promise<string | null> 
     const fileName = `${Date.now()}-${file.name.replace(/\s+/g, "-").toLowerCase()}`;
     const filePath = `uploads/${fileName}`;
     
-    console.log('Uploading to path:', filePath);
-    
-    // Upload the file
+    // Upload the file através do cliente seguro
     const { data, error } = await supabase.storage
-      .from('images') // Your bucket name
+      .from('images')
       .upload(filePath, buffer, {
         contentType: file.type,
         cacheControl: '3600',
-        upsert: true, // Changed to true to overwrite if exists
+        upsert: true,
       });
 
     if (error) {
@@ -57,14 +62,11 @@ export async function uploadImageToSupabase(file: File): Promise<string | null> 
       return null;
     }
 
-    console.log('Upload successful, data:', data);
-
     // Get the public URL
     const { data: urlData } = supabase.storage
       .from('images')
       .getPublicUrl(filePath);
 
-    console.log('Public URL:', urlData.publicUrl);
     return urlData.publicUrl;
   } catch (error) {
     console.error('Error in uploadImageToSupabase:', error);
