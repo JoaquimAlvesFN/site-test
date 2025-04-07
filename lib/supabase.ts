@@ -1,24 +1,15 @@
-import getConfig from 'next/config';
 import { createClient } from '@supabase/supabase-js';
-import { getEnv } from './env';
-// const { SUPABASE_URL, SUPABASE_ANON_KEY } = getConfig().serverRuntimeConfig;
 
 // These values should be in your .env.local file
-const supabaseUrl = process.env.SUPABASE_URL! || 'https://ztqhvowfpnzlpequcjfc.supabase.co';
-const supabaseKey = process.env.SUPABASE_ANON_KEY! || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp0cWh2b3dmcG56bHBlcXVjamZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzIzNzQ2MjAsImV4cCI6MjA0Nzk1MDYyMH0.hVDbKpp4qQ1IsoY6V4HJckmOPwBOHpiCSm59aBEvyYg';
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL! || '';
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY! || '';
 
 if (!supabaseUrl || !supabaseKey) {
   throw new Error('As variáveis de ambiente SUPABASE_URL e SUPABASE_SERVICE_KEY não estão configuradas.');
 }
 
 // Criar o cliente Supabase com persistência de sessão
-export const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: true,
-    detectSessionInUrl: true,
-    autoRefreshToken: true,
-  }
-});
+export const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Helper function para verificar o status de autenticação
 export async function getSessionInfo() {
