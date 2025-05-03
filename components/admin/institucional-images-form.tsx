@@ -73,12 +73,12 @@ export function InstitucionalImagesForm() {
         const settingsData = await getAllSettings()
         if (settingsData) {
           setAboutImages({
-            image1: settingsData.aboutImage1 || "/placeholder.svg?height=300&width=300",
-            image1Alt: settingsData.aboutImage1Alt || "Escritório SKY",
-            image2: settingsData.aboutImage2 || "/placeholder.svg?height=300&width=300",
-            image2Alt: settingsData.aboutImage2Alt || "Equipe SKY",
-            image3: settingsData.aboutImage3 || "/placeholder.svg?height=620&width=300",
-            image3Alt: settingsData.aboutImage3Alt || "Central de Operações SKY",
+            image1: settingsData.aboutImage1,
+            image1Alt: settingsData.aboutImage1Alt,
+            image2: settingsData.aboutImage2,
+            image2Alt: settingsData.aboutImage2Alt,
+            image3: settingsData.aboutImage3,
+            image3Alt: settingsData.aboutImage3Alt,
           })
         }
 
@@ -122,37 +122,62 @@ export function InstitucionalImagesForm() {
     setIsSubmitting(true)
 
     try {
+      // Verificar se há imagens anexadas
+      // const hasHeroImage = heroImages.heroImage && heroImages.heroImage !== "/placeholder.svg?height=600&width=800"
+      // const hasAboutImages = (
+      //   (aboutImages.image1 && aboutImages.image1 !== "/placeholder.svg?height=300&width=300") ||
+      //   (aboutImages.image2 && aboutImages.image2 !== "/placeholder.svg?height=300&width=300") ||
+      //   (aboutImages.image3 && aboutImages.image3 !== "/placeholder.svg?height=620&width=300")
+      // )
+      // const hasFacilityImages = facilitiesImages.some(
+      //   facility => facility.image && facility.image !== "/placeholder.svg?height=300&width=300"
+      // )
+
+      // if (!hasHeroImage && !hasAboutImages && !hasFacilityImages) {
+      //   toast({
+      //     title: "Nenhuma imagem anexada",
+      //     description: "Por favor, anexe pelo menos uma imagem antes de salvar.",
+      //     variant: "destructive",
+      //   })
+      //   setIsSubmitting(false)
+      //   return
+      // }
+
       // Update company info for hero section if values exist
       const heroData: any = {}
-      if (heroImages.heroImage) heroData.heroImage = heroImages.heroImage
-      if (heroImages.heroImageAlt) heroData.heroImageAlt = heroImages.heroImageAlt
-      if (heroImages.heroImageCaption) heroData.heroImageCaption = heroImages.heroImageCaption
-      if (heroImages.heroImageLocation) heroData.heroImageLocation = heroImages.heroImageLocation
+      if (heroImages.heroImage) {
+        heroData.heroImage = heroImages.heroImage
+        heroData.heroImageAlt = heroImages.heroImageAlt
+        heroData.heroImageCaption = heroImages.heroImageCaption
+        heroData.heroImageLocation = heroImages.heroImageLocation
+      }
       
       if (Object.keys(heroData).length > 0) {
         await updateCompanyInfo(heroData)
       }
 
       // Save about section images to settings if they exist
-      if (aboutImages.image1) await updateSetting("aboutImage1", aboutImages.image1)
-      if (aboutImages.image1Alt) await updateSetting("aboutImage1Alt", aboutImages.image1Alt)
-      if (aboutImages.image2) await updateSetting("aboutImage2", aboutImages.image2) 
-      if (aboutImages.image2Alt) await updateSetting("aboutImage2Alt", aboutImages.image2Alt)
-      if (aboutImages.image3) await updateSetting("aboutImage3", aboutImages.image3)
-      if (aboutImages.image3Alt) await updateSetting("aboutImage3Alt", aboutImages.image3Alt)
+      // if (hasAboutImages) {
+      //   if (aboutImages.image1) await updateSetting("aboutImage1", aboutImages.image1)
+      //   if (aboutImages.image1Alt) await updateSetting("aboutImage1Alt", aboutImages.image1Alt)
+      //   if (aboutImages.image2) await updateSetting("aboutImage2", aboutImages.image2) 
+      //   if (aboutImages.image2Alt) await updateSetting("aboutImage2Alt", aboutImages.image2Alt)
+      //   if (aboutImages.image3) await updateSetting("aboutImage3", aboutImages.image3)
+      //   if (aboutImages.image3Alt) await updateSetting("aboutImage3Alt", aboutImages.image3Alt)
+      // }
 
       // Update each facility if it has data
-      for (const facility of facilitiesImages) {
-        const facilityData: any = {}
-        if (facility.image) facilityData.image = facility.image
-        if (facility.alt) facilityData.alt = facility.alt
-        if (facility.title) facilityData.title = facility.title
-        if (facility.location) facilityData.location = facility.location
-
-        if (Object.keys(facilityData).length > 0) {
-          await updateCompanyFacility(facility.id, facilityData)
-        }
-      }
+      // for (const facility of facilitiesImages) {
+      //   if (facility.image && facility.image !== "/placeholder.svg?height=300&width=300") {
+      //     const facilityData: any = {
+      //       image: facility.image,
+      //       alt: facility.alt,
+      //       title: facility.title,
+      //       location: facility.location
+      //     }
+      //     await updateCompanyFacility(facility.id, facilityData)
+      //   }
+      // }
 
       toast({
         title: "Imagens salvas com sucesso!",
@@ -186,7 +211,10 @@ export function InstitucionalImagesForm() {
         <TabsContent value="hero" className="space-y-4">
           <div>
             <Label>Imagem Principal</Label>
-            <ImageSelector value={heroImages.heroImage} onChange={(value) => handleHeroChange("heroImage", value)} />
+            <ImageSelector 
+              value={heroImages.heroImage} 
+              onChange={(value) => handleHeroChange("heroImage", value)} 
+            />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -226,7 +254,10 @@ export function InstitucionalImagesForm() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label>Imagem 1</Label>
-              <ImageSelector value={aboutImages.image1} onChange={(value) => handleAboutChange("image1", value)} />
+              <ImageSelector 
+                value={aboutImages.image1} 
+                onChange={(value) => handleAboutChange("image1", value)} 
+              />
               <div className="mt-2">
                 <Label htmlFor="image1Alt">Texto Alternativo</Label>
                 <Input
@@ -240,7 +271,10 @@ export function InstitucionalImagesForm() {
 
             <div>
               <Label>Imagem 2</Label>
-              <ImageSelector value={aboutImages.image2} onChange={(value) => handleAboutChange("image2", value)} />
+              <ImageSelector 
+                value={aboutImages.image2} 
+                onChange={(value) => handleAboutChange("image2", value)} 
+              />
               <div className="mt-2">
                 <Label htmlFor="image2Alt">Texto Alternativo</Label>
                 <Input
@@ -254,7 +288,10 @@ export function InstitucionalImagesForm() {
 
             <div>
               <Label>Imagem 3</Label>
-              <ImageSelector value={aboutImages.image3} onChange={(value) => handleAboutChange("image3", value)} />
+              <ImageSelector 
+                value={aboutImages.image3} 
+                onChange={(value) => handleAboutChange("image3", value)} 
+              />
               <div className="mt-2">
                 <Label htmlFor="image3Alt">Texto Alternativo</Label>
                 <Input

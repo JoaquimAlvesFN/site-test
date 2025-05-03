@@ -3,6 +3,7 @@ import { Inter as FontSans } from 'next/font/google'
 import '@/app/globals.css'
 import { cn } from '@/lib/utils'
 import { AuthProvider } from '@/lib/auth-context'
+import { ReactQueryProvider } from '@/lib/react-query-provider'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -26,7 +27,9 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={cn('min-h-screen bg-white font-sans antialiased', fontSans.variable)}>
         <AuthProvider>
-          {children}
+          <ReactQueryProvider>
+            {children}
+          </ReactQueryProvider>
         </AuthProvider>
       </body>
     </html>

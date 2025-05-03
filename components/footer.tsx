@@ -15,11 +15,11 @@ interface FooterSettings {
   company: {
     description: string
   }
-  products: {
+  products?: {
     title: string
     links: FooterLink[]
   }
-  support: {
+  support?: {
     title: string
     links: FooterLink[]
   }
@@ -80,14 +80,6 @@ export function Footer() {
           company: {
             description: data.footer_company_description || settings.company.description,
           },
-          products: {
-            title: data.footer_products_title || settings.products.title,
-            links: data.footer_products_links ? JSON.parse(data.footer_products_links) : settings.products.links,
-          },
-          support: {
-            title: data.footer_support_title || settings.support.title,
-            links: data.footer_support_links ? JSON.parse(data.footer_support_links) : settings.support.links,
-          },
           contact: {
             title: data.footer_contact_title || settings.contact.title,
             salesLabel: data.footer_contact_sales_label || settings.contact.salesLabel,
@@ -115,7 +107,7 @@ export function Footer() {
   return (
     <footer className="bg-[#00205B] text-slate-200 py-12">
       <div className="container">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+        <div className="flex flex-row justify-between md:grid-cols-4 gap-8">
           <div>
             <DynamicLogo
               type="footer"
@@ -123,30 +115,6 @@ export function Footer() {
               className="h-10 w-auto mb-4 brightness-0 invert"
             />
             <p className="text-sm text-slate-400 mt-4">{settings.company.description}</p>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg mb-4">{settings.products.title}</h3>
-            <ul className="space-y-2">
-              {settings.products.links.map((link, index) => (
-                <li key={index}>
-                  <Link href={link.url} className="text-sm text-slate-400 hover:text-white">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h3 className="font-bold text-lg mb-4">{settings.support.title}</h3>
-            <ul className="space-y-2">
-              {settings.support.links.map((link, index) => (
-                <li key={index}>
-                  <Link href={link.url} className="text-sm text-slate-400 hover:text-white">
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
           </div>
           <div>
             <h3 className="font-bold text-lg mb-4">{settings.contact.title}</h3>
@@ -173,6 +141,7 @@ export function Footer() {
             <div className="mt-4">
               <Link
                 href={`https://wa.me/${settings.contact.whatsapp}`}
+                target="_blank"
                 className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-md text-sm"
               >
                 <Zap className="h-4 w-4" />

@@ -508,11 +508,11 @@ class MockDatabase {
             title: "Áreas Comuns",
             description: "Entretenimento em lobbies e salas de espera",
           },
-          {
-            icon: "BarChart",
-            title: "Análise de Uso",
-            description: "Relatórios de utilização e preferências",
-          },
+          // {
+          //   icon: "BarChart",
+          //   title: "Análise de Uso",
+          //   description: "Relatórios de utilização e preferências",
+          // },
         ],
         benefits: ["Atendimento prioritário", "Suporte técnico 24/7", "Instalação profissional", "Condições especiais"],
         cta: "Solicitar Proposta Comercial",

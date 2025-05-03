@@ -4,6 +4,8 @@ import { useState } from "react"
 import Link from "next/link"
 import { Zap, X } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
+import { useQuery } from "@tanstack/react-query"
+import { supabaseQueries } from "@/lib/supabase-queries"
 
 function handleWhatsAppClick() {
   toast({
@@ -14,6 +16,8 @@ function handleWhatsAppClick() {
 
 export function FloatingWhatsApp() {
   const [isOpen, setIsOpen] = useState(false)
+  const { data: settings } = useQuery(supabaseQueries.getSettings)
+  const whatsappNumber = settings?.footer_contact_whatsapp || "5511999999999"
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -31,7 +35,7 @@ export function FloatingWhatsApp() {
             Quer saber mais sobre os pacotes SKY? Fale com um de nossos consultores.
           </p>
           <Link
-            href="https://wa.me/5511999999999?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20pacotes%20SKY"
+            href={`https://wa.me/${whatsappNumber}?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20pacotes%20SKY`}
             className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2 text-sm"
             target="_blank"
             rel="noopener noreferrer"

@@ -1,27 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { getActiveFaqs } from "@/app/admin/actions"
+import { useQuery } from "@tanstack/react-query"
+import { supabaseQueries } from "@/lib/supabase-queries"
 
 export function FaqAccordion() {
-  const [faqs, setFaqs] = useState<any[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-
-  useEffect(() => {
-    async function loadFaqs() {
-      try {
-        const data = await getActiveFaqs()
-        setFaqs(data)
-      } catch (error) {
-        console.error("Erro ao carregar FAQs:", error)
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    loadFaqs()
-  }, [])
+  const { data: faqs, isLoading } = useQuery(supabaseQueries.getFaqs)
 
   if (isLoading) {
     return <div className="text-center py-4">Carregando perguntas frequentes...</div>
@@ -29,7 +13,7 @@ export function FaqAccordion() {
 
   return (
     <Accordion type="single" collapsible className="w-full">
-      {faqs.map((faq) => (
+      {faqs?.map((faq) => (
         <AccordionItem key={faq.id} value={`item-${faq.id}`}>
           <AccordionTrigger className="text-left">{faq.question}</AccordionTrigger>
           <AccordionContent>{faq.answer}</AccordionContent>

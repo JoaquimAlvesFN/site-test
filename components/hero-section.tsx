@@ -1,15 +1,17 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Image from "next/image"
 import Link from "next/link"
 import { Check, ChevronRight, ChevronLeft, Wifi } from "lucide-react"
+import { useQuery } from "@tanstack/react-query"
 
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 import { staticHeroSlides } from "@/lib/static-data"
 import { getActiveHeroSlides } from "@/app/admin/actions"
 import { Skeleton } from "@/components/ui/skeleton"
+import { supabaseQueries } from "@/lib/supabase-queries"
+import { OptimizedImage } from "./ui/optimized-image"
 
 // Tipo para os slides
 type HeroSlide = {
@@ -32,6 +34,16 @@ export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [slides, setSlides] = useState<HeroSlide[]>([])
   const [isLoading, setIsLoading] = useState(true)
+
+  // Buscar imagens do hero usando React Query com cache otimizado
+  const { data: heroImages, isLoading: isLoadingHeroImages } = useQuery({
+    ...supabaseQueries.getHeroImages,
+    staleTime: 0, // Sempre buscar dados frescos
+    gcTime: 0, // Manter em cache indefinidamente
+    refetchOnMount: false, // Não recarregar ao montar
+    refetchOnWindowFocus: false, // Não recarregar ao focar na janela
+    refetchOnReconnect: false, // Não recarregar ao reconectar
+  })
 
   // Buscar dados do banco ao carregar o componente
   useEffect(() => {
@@ -81,7 +93,7 @@ export function HeroSection() {
   const currentSlideData = slides[currentSlide]
 
   // Renderizar o skeleton durante o carregamento
-  if (isLoading) {
+  if (isLoading || isLoadingHeroImages) {
     return (
       <section className="relative overflow-hidden bg-[#E30613] text-white">
         <div className="container relative z-10 py-16 md:py-24">
@@ -170,18 +182,21 @@ export function HeroSection() {
                   <ChevronRight className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-gray-900 hover:bg-white/10" asChild>
+              {/* <Button size="lg" variant="outline" className="border-white text-gray-900 hover:bg-white/10" asChild>
                 <Link href="#tv-packages">Ver Pacotes</Link>
-              </Button>
+              </Button> */}
             </div>
           </div>
           <div className="relative hidden md:block">
-            <Image
-              src={currentSlideData?.image || "/placeholder.svg"}
-              alt="SKY TV Packages"
-              width={600}
-              height={400}
-              className="rounded-lg shadow-2xl"
+            <OptimizedImage
+              src={heroImages?.heroImage || currentSlideData?.image || "/placeholder.svg"}
+              alt={heroImages?.heroImageAlt || "SKY TV Packages"}
+              width={1920}
+              height={1080}
+              className="object-cover w-full h-full"
+              priority={true} // Sempre priorizar o carregamento
+              quality={90}
+              loading="eager" // Sempre carregar imediatamente
             />
           </div>
         </div>

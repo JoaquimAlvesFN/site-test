@@ -25,9 +25,9 @@ export function InstitucionalHeader() {
             <Link href="/" className="text-sm font-medium transition-colors hover:text-[#E30613]">
               Início
             </Link>
-            <Link href="#nossa-historia" className="text-sm font-medium transition-colors hover:text-[#E30613]">
+            {/* <Link href="#nossa-historia" className="text-sm font-medium transition-colors hover:text-[#E30613]">
               Nossa História
-            </Link>
+            </Link> */}
             <Link href="/institucional" className="text-sm font-medium text-[#E30613]">
               Institucional
             </Link>

@@ -222,7 +222,7 @@ export default async function InstitucionalPage() {
         </section>
 
         {/* Nossa Equipe */}
-        <section className="py-16 bg-slate-50">
+        {/* <section className="py-16 bg-slate-50">
           <div className="container">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">Nossa Equipe</h2>
@@ -272,7 +272,7 @@ export default async function InstitucionalPage() {
               )}
             </div>
           </div>
-        </section>
+        </section> */}
 
         {/* Nossas Instalações */}
         {/* {facilities && facilities.length > 0 && (
@@ -338,7 +338,7 @@ export default async function InstitucionalPage() {
               </div>
             </div>
 
-            <div className="text-center mt-12">
+            {/* <div className="text-center mt-12">
               <ContactModal
                 trigger={
                   <Button size="lg" className="bg-white text-[#00205B] hover:bg-white/90">
@@ -348,7 +348,7 @@ export default async function InstitucionalPage() {
                 title="Envie sua Mensagem"
                 description="Preencha seus dados para entrar em contato com nossa equipe. Responderemos o mais breve possível."
               />
-            </div>
+            </div> */}
           </div>
         </section>
       </main>

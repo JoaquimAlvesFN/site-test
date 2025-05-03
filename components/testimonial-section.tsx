@@ -28,57 +28,33 @@ function TestimonialCard({ quote, author, role, rating }: TestimonialProps) {
 }
 
 export async function TestimonialSection() {
-  // Usar dados estáticos para evitar erros com o banco de dados mock
-  // const testimonials = [
-  //   {
-  //     id: 1,
-  //     quote: "Excelente serviço! A instalação foi rápida e o sinal é perfeito. Recomendo a todos.",
-  //     author: "Carlos Silva",
-  //     role: "Cliente desde 2019",
-  //     rating: 5,
-  //     active: true,
-  //   },
-  //   {
-  //     id: 2,
-  //     quote: "Ótima variedade de canais e o aplicativo SKY Play é muito prático para assistir em qualquer lugar.",
-  //     author: "Ana Oliveira",
-  //     role: "Cliente desde 2020",
-  //     rating: 4,
-  //     active: true,
-  //   },
-  //   {
-  //     id: 3,
-  //     quote: "Atendimento ao cliente excepcional. Tive um problema e resolveram rapidamente.",
-  //     author: "Pedro Santos",
-  //     role: "Cliente desde 2018",
-  //     rating: 5,
-  //     active: true,
-  //   },
-  // ]
-
   const testimonials = await getAllTestimonialActive()
 
   return (
     <section className="bg-gray-50 py-12">
-      <div className="container mx-auto px-4">
-        <div className="mb-10 text-center">
-          <h2 className="mb-2 text-3xl font-bold text-gray-900">O que nossos clientes dizem</h2>
-          <p className="mx-auto max-w-2xl text-gray-600">
-            Veja os depoimentos de quem já escolheu a SKY para sua casa ou empresa
-          </p>
-        </div>
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((testimonial) => (
-            <TestimonialCard
-              key={testimonial.id}
-              quote={testimonial.quote}
-              author={testimonial.author}
-              role={testimonial.role}
-              rating={testimonial.rating}
-            />
-          ))}
-        </div>
-      </div>
+      {
+        testimonials.length > 0 && (
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">O Que Nossos Clientes Dizem</h2>
+              <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
+                Milhares de famílias brasileiras já aproveitam a qualidade SKY. Veja alguns depoimentos.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {testimonials.map((testimonial) => (
+                <TestimonialCard
+                  key={testimonial.id}
+                  quote={testimonial.quote}
+                  author={testimonial.author}
+                  role={testimonial.role}
+                  rating={testimonial.rating}
+                />
+              ))}
+            </div>
+          </div>
+        )
+      }
     </section>
   )
 }

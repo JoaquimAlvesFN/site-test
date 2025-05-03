@@ -25,11 +25,18 @@ import { WhyChooseSection } from "@/components/why-choose-section"
 import { TestimonialSection } from "@/components/testimonial-section"
 
 // Importar funções para buscar dados
-import { getActivePackages } from "@/app/admin/actions"
+import { getActivePackages, getAllSettings } from "@/app/admin/actions"
+
+interface FooterSettings {
+  contact: {
+    whatsapp: string
+  }
+}
 
 export default async function Home() {
   // Buscar dados do banco de dados
   const packagesData = await getActivePackages()
+  const settings = await getAllSettings()
 
   // Garantir que packagesData é um array
   const packages = Array.isArray(packagesData) ? packagesData : []
@@ -52,37 +59,44 @@ export default async function Home() {
               />
             </Link>
             <nav className="hidden md:flex gap-6">
+              <Link href="/institucional" className="text-sm font-medium transition-colors hover:text-[#E30613]">
+                Institucional
+              </Link>
               <Link href="#tv-packages" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Pacotes TV
               </Link>
-              <Link href="#internet" className="text-sm font-medium transition-colors hover:text-[#E30613]">
+              {/* <Link href="#internet" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Internet
-              </Link>
+              </Link> */}
               <Link href="#combos" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Combos
               </Link>
               <Link href="#channels" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Canais
               </Link>
-              <Link href="/institucional" className="text-sm font-medium transition-colors hover:text-[#E30613]">
-                Institucional
-              </Link>
             </nav>
           </div>
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center">
+            {/* <div className="hidden md:flex items-center">
               <Phone className="h-4 w-4 text-[#E30613] mr-1" />
               <Link href="tel:08006004990" className="text-sm font-bold hover:text-[#E30613]">
                 0800 600 4990
               </Link>
-            </div>
-            <ContactModal
+            </div> */}
+            {/* <ContactModal
               trigger={<Button className="bg-[#E30613] hover:bg-[#c00511]">Assinar Agora</Button>}
               title="Assine SKY"
               description="Preencha seus dados para assinar um dos nossos planos. Nossa equipe entrará em contato em breve."
-            />
+            /> */}
             <Link
-              href="https://wa.me/5511999999999"
+              href={`#contact`}
+            >
+              <Button className="bg-[#E30613] hover:bg-[#c00511]">Assinar Agora</Button>
+            </Link>
+            <Link
+              href={`https://wa.me/${settings.footer_contact_whatsapp}`}
+              // href={`https://wa.me/5511999999999`}
+              target="_blank"
               className="flex items-center justify-center rounded-full bg-green-500 p-2 md:hidden"
             >
               <Zap className="h-5 w-5 text-white" />
@@ -263,13 +277,6 @@ export default async function Home() {
 
         <section className="py-16 bg-slate-50">
           <div className="container">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">O Que Nossos Clientes Dizem</h2>
-              <p className="mt-4 text-lg text-muted-foreground max-w-3xl mx-auto">
-                Milhares de famílias brasileiras já aproveitam a qualidade SKY. Veja alguns depoimentos.
-              </p>
-            </div>
-
             <Suspense fallback={<div>Carregando...</div>}>
               <TestimonialSection />
             </Suspense>

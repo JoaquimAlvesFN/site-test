@@ -50,6 +50,8 @@
     "@radix-ui/react-tooltip": "^1.1.6",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/supabase-js": "^2.49.4",
+    "@tanstack/react-query": "^5.74.3",
+    "@tanstack/react-query-devtools": "^5.74.3",
     "@tidbcloud/serverless": "latest",
     "@types/better-sqlite3": "latest",
     "@types/pg": "^8.10.9",
