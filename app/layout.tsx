@@ -12,10 +12,25 @@ const fontSans = FontSans({
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | SKY Pacotes',
-    default: 'SKY Pacotes - A melhor programação para você',
+    template: '%s | Ligcel SKY',
+    default: 'Ligcel SKY - TV por Assinatura, Pacotes e Canais | Revendedor Autorizado',
   },
-  description: 'Conheça as melhores ofertas e pacotes da SKY. Internet banda larga e TV por assinatura de qualidade.',
+  description: 'Assine SKY com a Ligcel: TV por assinatura com os melhores pacotes, canais em HD, filmes e séries. Revendedor autorizado com preços especiais e atendimento personalizado.',
+  keywords: 'sky, tv por assinatura, pacotes sky, canais hd, filmes, séries, revendedor autorizado sky, Ligcel sky',
+  authors: [{ name: 'Ligcel SKY' }],
+  creator: 'Ligcel SKY',
+  publisher: 'Ligcel SKY',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  openGraph: {
+    title: 'Ligcel SKY - TV por Assinatura, Pacotes e Canais | Revendedor Autorizado',
+    description: 'Assine SKY com a Ligcel: TV por assinatura com os melhores pacotes, canais em HD, filmes e séries. Revendedor autorizado com preços especiais e atendimento personalizado.',
+    type: 'website',
+    locale: 'pt_BR',
+  }
 }
 
 export default function RootLayout({
