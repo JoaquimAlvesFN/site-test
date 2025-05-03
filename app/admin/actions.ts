@@ -21,7 +21,7 @@ import {
   businessSection,
 } from "@/lib/db"
 import { revalidatePath } from "next/cache"
-import { eq } from "drizzle-orm"
+import { eq, or } from "drizzle-orm"
 import { getDb } from "@/lib/db"
 import axios from "axios"
 import { uploadImageToSupabase } from "@/lib/supabase"
@@ -65,13 +65,16 @@ export async function deleteChannel(id: number) {
   }
 }
 
-export async function createChannel(data: any) {
+export async function createChannel(channel: any) {
   try {
-    await db.channel.create({data})
+    await db.channel.create({data: {
+      ...channel,
+      order: parseInt(channel.order),
+    }})
     revalidatePath("/admin/channels")
     return { success: true }
-  } catch (error) {
-    console.error("Error creating channel:", error)
+  } catch (error: any) {
+    console.error("Error creating channel:", error.message)
     return { success: false }
   }
 }

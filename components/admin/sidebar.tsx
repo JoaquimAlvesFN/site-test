@@ -34,11 +34,11 @@ export function AdminSidebar() {
       href: "/admin/dashboard",
       icon: <LayoutDashboard className="h-5 w-5" />,
     },
-    {
-      title: "Página Inicial",
-      href: "/admin/homepage",
-      icon: <Home className="h-5 w-5" />,
-    },
+    // {
+    //   title: "Página Inicial",
+    //   href: "/admin/homepage",
+    //   icon: <Home className="h-5 w-5" />,
+    // },
     {
       title: "Pacotes",
       href: "/admin/packages",
