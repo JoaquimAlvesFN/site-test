@@ -98,12 +98,17 @@ class MockDatabase {
     this.data.contacts = [
       {
         id: 1,
-        name: "João Silva",
-        phone: "(11) 98765-4321",
-        email: "joao.silva@example.com",
+        endereco: "Rua das Flores, 123",
         cep: "01234-567",
-        interest: "tv",
-        packageId: 2,
+        cnpj: "12.345.678/0001-90",
+        email: "joao.silva@example.com",
+        telefone: "(11) 98765-4321",
+        cpf: "123.456.789-00",
+        rg: "12.345.678-9",
+        dataExpedicao: "2020-01-01",
+        orgao: "SSP",
+        cargoCpf: "Empresário",
+        produto: "TV por Assinatura",
         status: "pending",
         notes: "",
         createdAt: "2023-04-15T10:30:00.000Z",
@@ -111,12 +116,16 @@ class MockDatabase {
       },
       {
         id: 2,
-        name: "Maria Oliveira",
-        phone: "(21) 98765-4321",
-        email: "maria.oliveira@example.com",
+        endereco: "Avenida Principal, 456",
         cep: "20000-000",
-        interest: "internet",
-        packageId: null,
+        email: "maria.oliveira@example.com",
+        telefone: "(21) 98765-4321",
+        cpf: "987.654.321-00",
+        rg: "98.765.432-1",
+        dataExpedicao: "2019-05-15",
+        orgao: "SSP",
+        cargoCpf: "Autônomo",
+        produto: "Internet",
         status: "contacted",
         notes: "Cliente interessado em internet de alta velocidade",
         createdAt: "2023-04-16T14:20:00.000Z",
@@ -124,12 +133,17 @@ class MockDatabase {
       },
       {
         id: 3,
-        name: "Pedro Santos",
-        phone: "(31) 98765-4321",
-        email: "",
+        endereco: "Rua dos Comerciantes, 789",
         cep: "30000-000",
-        interest: "combo",
-        packageId: 3,
+        cnpj: "98.765.432/0001-10",
+        email: "pedro.santos@example.com",
+        telefone: "(31) 98765-4321",
+        cpf: "456.789.123-00",
+        rg: "45.678.912-3",
+        dataExpedicao: "2021-03-20",
+        orgao: "SSP",
+        cargoCpf: "Empresário",
+        produto: "Combo TV + Internet",
         status: "converted",
         notes: "Cliente assinou o pacote Premium",
         createdAt: "2023-04-10T16:45:00.000Z",
@@ -851,17 +865,22 @@ export type Setting = {
 export type NewSetting = Omit<Setting, "id" | "updatedAt">
 
 export type Contact = {
-  id: number
   name: string
-  phone: string
-  email?: string
+  endereco?: string
   cep: string
-  interest: string
-  packageId?: number
+  cnpj?: string
+  email: string
+  telefone: string
+  phone: string
+  cpf: string
+  rg: string
+  dataExpedicao: string
+  orgao: string
+  cargoCpf: string
+  produto?: string
+  interest?: string
   status: string
   notes?: string
-  createdAt: string
-  updatedAt: string
 }
 
 export type NewContact = Omit<Contact, "id" | "createdAt" | "updatedAt">

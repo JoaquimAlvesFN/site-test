@@ -11,7 +11,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { ContactForm } from "@/components/contact-form"
+import { PessoaFisicaForm } from "@/components/pessoa-fisica-form"
 import { toast } from "@/components/ui/use-toast"
 
 interface ContactModalProps {
@@ -20,6 +20,7 @@ interface ContactModalProps {
   description?: string
   packageId?: number
   defaultInterest?: "tv" | "internet" | "combo"
+  produto?: string
 }
 
 export function ContactModal({
@@ -28,6 +29,7 @@ export function ContactModal({
   description = "Preencha o formulário abaixo e entraremos em contato o mais breve possível.",
   packageId,
   defaultInterest = "tv",
+  produto,
 }: ContactModalProps) {
   const [open, setOpen] = useState(false)
 
@@ -42,19 +44,19 @@ export function ContactModal({
     // Fechar o modal após envio bem-sucedido
     setTimeout(() => {
       setOpen(false)
-    }, 2000)
+    }, 1000)
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{trigger}</DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[520px]">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
-        <div className="py-4">
-          <ContactForm packageId={packageId} defaultInterest={defaultInterest} onSuccess={handleSuccess} />
+        <div className="py-4 max-h-[70vh] overflow-y-auto">
+          <PessoaFisicaForm onSuccess={handleSuccess} produto={produto} />
         </div>
       </DialogContent>
     </Dialog>

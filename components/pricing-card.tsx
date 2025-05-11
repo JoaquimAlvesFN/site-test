@@ -71,6 +71,7 @@ export function PricingCard({
           description={`Preencha seus dados para assinar o pacote ${title}. Nossa equipe entrará em contato em breve.`}
           packageId={packageId}
           defaultInterest={title.toLowerCase().includes("internet") ? "internet" : "tv"}
+          produto={`${title} - ${price}`}
         />
       </CardFooter>
     </Card>

@@ -3,6 +3,7 @@
 import { db, Contact, getTimestamp } from "@/lib/db"
 import { revalidatePath } from "next/cache"
 import { eq } from "drizzle-orm"
+import { supabase } from "@/lib/supabase"
 
 // Função para salvar um novo contato
 export async function saveContact(data: {
@@ -115,6 +116,43 @@ export async function updateContactStatus(contactId: number, newStatus: string) 
   } catch (error) {
     console.error("Erro ao atualizar status do contato:", error);
     return { success: false, message: "Ocorreu um erro ao atualizar o status" };
+  }
+}
+
+// Função para salvar dados de pessoa física
+export async function savePessoaFisica(data: Contact) {
+  try {
+    if (!data.endereco || !data.cep || !data.email || !data.telefone || !data.cpf || !data.rg || !data.dataExpedicao || !data.orgao || !data.cargoCpf) {
+      return {
+        success: false,
+        message: "Por favor, preencha todos os campos obrigatórios.",
+      }
+    }
+    // Salvar no banco de dados (ajuste para o seu ORM ou banco)
+    // Salvar no Supabase
+    const { error } = await supabase
+      .from("Contact")
+      .insert({
+        ...data,
+        phone: data.telefone,
+        telefone: data.telefone,
+        produto: data.produto || null,
+      })
+
+    if (error) {
+      throw error
+    }
+
+    return {
+      success: true,
+      message: "Cadastro enviado com sucesso! Em breve entraremos em contato.",
+    }
+  } catch (error) {
+    console.error("Erro ao salvar pessoa física:", error)
+    return {
+      success: false,
+      message: "Ocorreu um erro ao enviar seu cadastro. Por favor, tente novamente.",
+    }
   }
 }
 

@@ -221,6 +221,23 @@ export const businessSection = sqliteTable("business_section", {
   updatedAt: text("updated_at").default(String(new Date().toISOString())),
 })
 
+export const pessoaFisica = sqliteTable("pessoa_fisica", {
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  endereco: text("endereco").notNull(),
+  cep: text("cep").notNull(),
+  cnpj: text("cnpj"),
+  email: text("email").notNull(),
+  telefone: text("telefone").notNull(),
+  cpf: text("cpf").notNull(),
+  rg: text("rg").notNull(),
+  dataExpedicao: text("data_expedicao").notNull(),
+  orgao: text("orgao").notNull(),
+  cargoCpf: text("cargo_cpf").notNull(),
+  produto: text("produto"),
+  createdAt: text("created_at").default(String(new Date().toISOString())),
+  updatedAt: text("updated_at").default(String(new Date().toISOString())),
+})
+
 // Types
 export type Package = typeof packages.$inferSelect
 export type NewPackage = typeof packages.$inferInsert
@@ -274,4 +291,7 @@ export type NewInternetSectionData = typeof internetSection.$inferInsert
 
 export type BusinessSectionData = typeof businessSection.$inferSelect
 export type NewBusinessSectionData = typeof businessSection.$inferInsert
+
+export type PessoaFisica = typeof pessoaFisica.$inferSelect
+export type NewPessoaFisica = typeof pessoaFisica.$inferInsert
 
