@@ -881,6 +881,8 @@ export type Contact = {
   interest?: string
   status: string
   notes?: string
+  createdAt: string | Date
+  updatedAt?: string | Date | null
 }
 
 export type NewContact = Omit<Contact, "id" | "createdAt" | "updatedAt">

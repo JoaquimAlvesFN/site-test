@@ -17,6 +17,8 @@ export interface ContactFilters {
   name: string
   email: string
   phone: string
+  cpf: string
+  cnpj: string
   status: string
 }
 
@@ -25,6 +27,8 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
     name: "",
     email: "",
     phone: "",
+    cpf: "",
+    cnpj: "",
     status: defaultStatus,
   })
 
@@ -47,6 +51,8 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
       name: "",
       email: "",
       phone: "",
+      cpf: "",
+      cnpj: "",
       status: "",
     }
     setFilters(emptyFilters)
@@ -84,6 +90,26 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
               placeholder="Filtrar por telefone"
               value={filters.phone}
               onChange={(e) => handleChange("phone", e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cpf-filter">CPF</Label>
+            <Input
+              id="cpf-filter"
+              placeholder="Filtrar por CPF"
+              value={filters.cpf}
+              onChange={(e) => handleChange("cpf", e.target.value)}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="cnpj-filter">CNPJ</Label>
+            <Input
+              id="cnpj-filter"
+              placeholder="Filtrar por CNPJ"
+              value={filters.cnpj}
+              onChange={(e) => handleChange("cnpj", e.target.value)}
             />
           </div>
 

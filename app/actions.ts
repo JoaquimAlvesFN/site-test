@@ -52,7 +52,6 @@ export async function getContacts() {
     // Adicionar log para depuração
     console.log("Iniciando busca de contatos");
     
-    // Verificar se a tabela contact existe no banco antes de tentar buscar
     try {
       console.log("Buscando contatos");
       const contactsData = await db.contact.findMany({
@@ -80,7 +79,7 @@ export async function getContacts() {
       throw dbError;
     }
   } catch (error) {
-    console.error("Erro ao buscar contatos:", error);
+    console.error("Erro ao buscar contatos:", error.message);
     // Retornar array vazio em caso de erro para evitar quebrar a UI
     return [];
   }

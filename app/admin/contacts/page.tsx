@@ -11,15 +11,24 @@ import { ContactFilters, type ContactFilters as ContactFiltersType } from "@/com
 interface Contact {
   id: number;
   name: string;
-  phone: string;
-  email?: string | null;
+  endereco: string;
   cep: string;
-  interest: string;
+  cnpj?: string | null;
+  email: string;
+  telefone: string;
+  phone: string;
+  cpf: string;
+  rg: string;
+  dataExpedicao: string;
+  orgao: string;
+  cargoCpf: string;
+  produto?: string | null;
+  interest?: string | null;
   status: string;
-  createdAt: string | Date;
-  updatedAt?: string | Date;
-  packageId?: number | null;
   notes?: string | null;
+  createdAt: string | Date;
+  updatedAt?: string | Date | null;
+  packageId?: number | null;
 }
 
 export default function ContactsPage() {
@@ -31,6 +40,8 @@ export default function ContactsPage() {
     name: "",
     email: "",
     phone: "",
+    cpf: "",
+    cnpj: "",
     status: "pending",
   })
 
@@ -101,9 +112,19 @@ export default function ContactsPage() {
       if (filters.phone && !String(contact.phone || "").includes(filters.phone)) {
         return false;
       }
+
+      // CPF
+      if (filters.cpf && !String(contact.cpf || "").includes(filters.cpf)) {
+        return false;
+      }
+
+      // CNPJ
+      if (filters.cnpj && !String(contact.cnpj || "").includes(filters.cnpj)) {
+        return false;
+      }
       
       // Status
-      if (filters.status && contact.status !== filters.status) {
+      if (filters.status && filters.status !== "all" && contact.status !== filters.status) {
         return false;
       }
       
@@ -288,10 +309,14 @@ export default function ContactsPage() {
                 <thead>
                   <tr className="border-b">
                     <th className="text-left py-3 px-4">Nome</th>
+                    <th className="text-left py-3 px-4">CPF</th>
+                    <th className="text-left py-3 px-4">RG</th>
                     <th className="text-left py-3 px-4">Telefone</th>
                     <th className="text-left py-3 px-4">E-mail</th>
+                    <th className="text-left py-3 px-4">Endereço</th>
                     <th className="text-left py-3 px-4">CEP</th>
-                    <th className="text-left py-3 px-4">Interesse</th>
+                    <th className="text-left py-3 px-4">CNPJ</th>
+                    <th className="text-left py-3 px-4">Produto</th>
                     <th className="text-left py-3 px-4">Data</th>
                     <th className="text-left py-3 px-4">Status</th>
                     <th className="text-right py-3 px-4">Ações</th>
@@ -301,18 +326,14 @@ export default function ContactsPage() {
                   {filteredContacts.map((contact) => (
                     <tr key={contact.id} className="border-b hover:bg-slate-50">
                       <td className="py-3 px-4">{contact.name || "-"}</td>
+                      <td className="py-3 px-4">{contact.cpf || "-"}</td>
+                      <td className="py-3 px-4">{contact.rg || "-"}</td>
                       <td className="py-3 px-4">{contact.phone || "-"}</td>
                       <td className="py-3 px-4">{contact.email || "-"}</td>
+                      <td className="py-3 px-4">{contact.endereco || "-"}</td>
                       <td className="py-3 px-4">{contact.cep || "-"}</td>
-                      <td className="py-3 px-4">
-                        {contact.interest === "tv"
-                          ? "TV por Assinatura"
-                          : contact.interest === "internet"
-                            ? "Internet"
-                            : contact.interest === "combo"
-                              ? "Combo (TV + Internet)"
-                              : contact.interest || "-"}
-                      </td>
+                      <td className="py-3 px-4">{contact.cnpj || "-"}</td>
+                      <td className="py-3 px-4">{contact.produto || "-"}</td>
                       <td className="py-3 px-4">
                         {(() => {
                           try {
