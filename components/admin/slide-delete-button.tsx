@@ -14,7 +14,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { toast } from "@/components/ui/use-toast"
-// Adicionar a importação da ação do servidor
 import { deleteHeroSlide } from "@/app/admin/actions"
 
 interface SlideDeleteButtonProps {
@@ -25,21 +24,20 @@ export function SlideDeleteButton({ id }: SlideDeleteButtonProps) {
   const [open, setOpen] = useState(false)
   const [isDeleting, setIsDeleting] = useState(false)
 
-  // Modificar a função handleDelete para chamar a ação do servidor
   async function handleDelete() {
     setIsDeleting(true)
     try {
       await deleteHeroSlide(id)
 
       toast({
-        title: "Slide excluído com sucesso!",
-        description: "O slide foi removido permanentemente do carrossel da página inicial.",
+        title: "Imagem excluída com sucesso!",
+        description: "A imagem foi removida permanentemente do carrossel da página inicial.",
       })
     } catch (error) {
       console.error("Failed to delete slide:", error)
       toast({
         title: "Erro ao excluir",
-        description: "Ocorreu um erro ao excluir o slide.",
+        description: "Ocorreu um erro ao excluir a imagem.",
         variant: "destructive",
       })
     } finally {
@@ -51,10 +49,10 @@ export function SlideDeleteButton({ id }: SlideDeleteButtonProps) {
   return (
     <>
       <Button
-        variant="outline"
+        variant="ghost"
         size="sm"
         onClick={() => setOpen(true)}
-        className="text-red-500 border-red-200 hover:bg-red-50 hover:text-red-600"
+        className="h-8 w-8 p-0 text-white hover:text-white hover:bg-red-600/20"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
@@ -64,7 +62,7 @@ export function SlideDeleteButton({ id }: SlideDeleteButtonProps) {
           <AlertDialogHeader>
             <AlertDialogTitle>Confirmar exclusão</AlertDialogTitle>
             <AlertDialogDescription>
-              Tem certeza que deseja excluir este slide? Esta ação não pode ser desfeita.
+              Tem certeza que deseja excluir esta imagem do carrossel? Esta ação não pode ser desfeita.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
