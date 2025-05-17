@@ -63,7 +63,7 @@ export async function BusinessSection() {
               ))}
             </div>
 
-            <Button className="bg-[#00205B] hover:bg-[#001a49]" asChild>
+            <Button className="bg-[#E30613] hover:bg-[#E30613]" asChild>
               <Link href={sectionData.ctaLink}>{sectionData.cta}</Link>
             </Button>
           </div>

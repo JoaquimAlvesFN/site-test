@@ -59,20 +59,20 @@ export default async function Home() {
               />
             </Link>
             <nav className="hidden md:flex gap-6">
-              <Link href="/institucional" className="text-sm font-medium transition-colors hover:text-[#E30613]">
-                Institucional
-              </Link>
               <Link href="#tv-packages" className="text-sm font-medium transition-colors hover:text-[#E30613]">
-                Pacotes TV
+                Pacotes
               </Link>
               {/* <Link href="#internet" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Internet
               </Link> */}
-              <Link href="#combos" className="text-sm font-medium transition-colors hover:text-[#E30613]">
+              {/* <Link href="#combos" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Combos
-              </Link>
+              </Link> */}
               <Link href="#channels" className="text-sm font-medium transition-colors hover:text-[#E30613]">
                 Canais
+              </Link>
+              <Link href="/institucional" className="text-sm font-medium transition-colors hover:text-[#E30613]">
+                Institucional
               </Link>
             </nav>
           </div>
@@ -132,13 +132,13 @@ export default async function Home() {
             </div>
 
             <Tabs defaultValue="pos-pago" className="w-full max-w-5xl mx-auto">
-              <TabsList className="grid w-full grid-cols-2 mb-8">
+              <TabsList className="grid w-full grid-cols-1 mb-8">
                 <TabsTrigger value="pos-pago" className="text-base py-3">
                   Pós-Pago
                 </TabsTrigger>
-                <TabsTrigger value="pre-pago" className="text-base py-3">
+                {/* <TabsTrigger value="pre-pago" className="text-base py-3">
                   Pré-Pago
-                </TabsTrigger>
+                </TabsTrigger> */}
               </TabsList>
               <TabsContent value="pos-pago" className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -164,7 +164,7 @@ export default async function Home() {
                   )}
                 </div>
               </TabsContent>
-              <TabsContent value="pre-pago" className="space-y-4">
+              {/* <TabsContent value="pre-pago" className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {prePackages.length > 0 ? (
                     prePackages.map((pkg) => (
@@ -187,7 +187,7 @@ export default async function Home() {
                     </div>
                   )}
                 </div>
-              </TabsContent>
+              </TabsContent> */}
             </Tabs>
 
             <div className="mt-12 text-center">
