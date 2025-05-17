@@ -153,9 +153,14 @@ export function HeroSection() {
               />
             ))}
           </div>
-          
-          <CarouselPrevious className="absolute -left-4 sm:left-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
-          <CarouselNext className="absolute -right-4 sm:right-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
+          {
+            slides.length > 1 && (
+              <>
+                <CarouselPrevious className="absolute -left-4 sm:left-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
+                <CarouselNext className="absolute -right-4 sm:right-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
+              </>
+            )
+          }
         </Carousel>
       </div>
     </section>
