@@ -110,8 +110,8 @@ export function HeroSection() {
 
   // Renderizar o conteúdo real quando estiver carregado
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
-      <div className="container relative z-10 py-8 md:py-12">
+    <section className="overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
+      <div className="container z-10 pb-0 pt-8 md:pt-12 md:pb-2 flex items-center justify-center">
         <Carousel 
           className="w-full" 
           opts={{

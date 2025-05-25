@@ -36,35 +36,45 @@ export function ContactForm({ packageId, defaultInterest = "tv", onSuccess }: Co
     setIsSubmitting(true)
 
     try {
-      const result = await saveContact(formData)
+      // Get WhatsApp number from settings
+      const response = await fetch('/api/settings')
+      const settings = await response.json()
+      const whatsappNumber = settings.footer_contact_whatsapp || "5511999999999"
 
-      if (result.success) {
-        toast({
-          title: "Solicitação enviada com sucesso!",
-          description: "Recebemos sua solicitação e entraremos em contato em breve.",
-          variant: "default",
-        })
+      // Format the message
+      const message = `Olá! Tenho interesse em contratar:\n\n` +
+        `Nome: ${formData.name}\n` +
+        `Telefone: ${formData.phone}\n` +
+        `Email: ${formData.email}\n` +
+        `CEP: ${formData.cep}\n` +
+        `Interesse: ${formData.interest === 'tv' ? 'TV por Assinatura' : formData.interest === 'internet' ? 'Internet' : 'Combo (TV + Internet)'}\n` +
+        `${formData.packageId ? `Pacote ID: ${formData.packageId}\n` : ''}`
 
-        // Limpar formulário
-        setFormData({
-          name: "",
-          phone: "",
-          email: "",
-          cep: "",
-          interest: defaultInterest,
-          packageId: packageId,
-        })
+      // Encode the message for URL
+      const encodedMessage = encodeURIComponent(message)
 
-        // Callback de sucesso
-        if (onSuccess) {
-          onSuccess()
-        }
-      } else {
-        toast({
-          title: "Erro",
-          description: result.message,
-          variant: "destructive",
-        })
+      // Redirect to WhatsApp Web
+      window.open(`https://wa.me/${whatsappNumber}?text=${encodedMessage}`, '_blank')
+
+      toast({
+        title: "Redirecionando para WhatsApp",
+        description: "Você será redirecionado para o WhatsApp para falar com um consultor.",
+        variant: "default",
+      })
+
+      // Limpar formulário
+      setFormData({
+        name: "",
+        phone: "",
+        email: "",
+        cep: "",
+        interest: defaultInterest,
+        packageId: packageId,
+      })
+
+      // Callback de sucesso
+      if (onSuccess) {
+        onSuccess()
       }
     } catch (error) {
       console.error("Erro ao enviar formulário:", error)

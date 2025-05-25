@@ -6,6 +6,8 @@ import { getContacts, updateContactStatus } from "@/app/actions"
 import { ContactStatusBadge } from "@/components/admin/contact-status-badge"
 import { ContactStatusSelect } from "@/components/admin/contact-status-select"
 import { ContactFilters, type ContactFilters as ContactFiltersType } from "@/components/admin/contact-filters"
+import { ContactDetailsModal } from "@/components/admin/contact-details-modal"
+// import { Contact } from "@/lib/db"
 
 // Adicionar uma interface simples para Contact
 interface Contact {
@@ -15,6 +17,8 @@ interface Contact {
   cep: string;
   cnpj?: string | null;
   email: string;
+  email_faturamento?: string | null;
+  razao_social?: string | null;
   telefone: string;
   phone: string;
   cpf: string;
@@ -29,6 +33,7 @@ interface Contact {
   createdAt: string | Date;
   updatedAt?: string | Date | null;
   packageId?: number | null;
+  type: 'individual' | 'company';
 }
 
 export default function ContactsPage() {
@@ -52,9 +57,16 @@ export default function ContactsPage() {
     
     try {
       const data = await getContacts();
-      
-      // Garantir que data é um array válido
-      const safeData = Array.isArray(data) ? data.filter(contact => contact !== null && contact !== undefined) : [];
+
+      // Garantir que data é um array válido e adicionar o tipo baseado no CNPJ
+      const safeData = Array.isArray(data) 
+        ? data
+            .filter(contact => contact !== null && contact !== undefined)
+            .map(contact => ({
+              ...contact,
+              type: contact.quantidade_pontos && contact.quantidade_pontos > 0 ? ('individual' as const) : ('company' as const)
+            }))
+        : [];
       
       setContacts(safeData);
       
@@ -308,15 +320,17 @@ export default function ContactsPage() {
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4">Nome</th>
-                    <th className="text-left py-3 px-4">CPF</th>
-                    <th className="text-left py-3 px-4">RG</th>
-                    <th className="text-left py-3 px-4">Telefone</th>
-                    <th className="text-left py-3 px-4">E-mail</th>
-                    <th className="text-left py-3 px-4">Endereço</th>
-                    <th className="text-left py-3 px-4">CEP</th>
-                    <th className="text-left py-3 px-4">CNPJ</th>
-                    <th className="text-left py-3 px-4">Produto</th>
+                    <th className="text-left py-3 px-4">Nome/Razão Social</th>
+                    <th className="text-left py-3 px-4">Tipo</th>
+                    {filteredContacts.some(contact => contact.type === 'company' ? contact.cnpj : contact.cpf) && (
+                      <th className="text-left py-3 px-4">CPF/CNPJ</th>
+                    )}
+                    {filteredContacts.some(contact => contact.phone) && (
+                      <th className="text-left py-3 px-4">Telefone</th>
+                    )}
+                    {filteredContacts.some(contact => contact.email || (contact.type === 'company' && contact.email_faturamento)) && (
+                      <th className="text-left py-3 px-4">E-mail</th>
+                    )}
                     <th className="text-left py-3 px-4">Data</th>
                     <th className="text-left py-3 px-4">Status</th>
                     <th className="text-right py-3 px-4">Ações</th>
@@ -325,15 +339,27 @@ export default function ContactsPage() {
                 <tbody>
                   {filteredContacts.map((contact) => (
                     <tr key={contact.id} className="border-b hover:bg-slate-50">
-                      <td className="py-3 px-4">{contact.name || "-"}</td>
-                      <td className="py-3 px-4">{contact.cpf || "-"}</td>
-                      <td className="py-3 px-4">{contact.rg || "-"}</td>
-                      <td className="py-3 px-4">{contact.phone || "-"}</td>
-                      <td className="py-3 px-4">{contact.email || "-"}</td>
-                      <td className="py-3 px-4">{contact.endereco || "-"}</td>
-                      <td className="py-3 px-4">{contact.cep || "-"}</td>
-                      <td className="py-3 px-4">{contact.cnpj || "-"}</td>
-                      <td className="py-3 px-4">{contact.produto || "-"}</td>
+                      <td className="py-3 px-4">
+                        {contact.type === 'company' ? contact.razao_social : contact.name}
+                      </td>
+                      <td className="py-3 px-4">
+                        {contact.type === 'company' ? 'Pessoa Jurídica' : 'Pessoa Física'}
+                      </td>
+                      {/* {filteredContacts.some(c => c.type === 'company' ? c.cnpj : c.cpf) && ( */}
+                      <td className="py-3 px-4">
+                        {contact.type === 'company' ? contact.cnpj : contact.cpf}
+                      </td>
+                      {/* )} */}
+                      {filteredContacts.some(c => c.phone) && (
+                        <td className="py-3 px-4">{contact.phone || "-"}</td>
+                      )}
+                      {filteredContacts.some(c => c.email || (c.type === 'company' && c.email_faturamento)) && (
+                        <td className="py-3 px-4">
+                          {contact.type === 'company' 
+                            ? contact.email_faturamento
+                            : contact.email}
+                        </td>
+                      )}
                       <td className="py-3 px-4">
                         {(() => {
                           try {
@@ -350,11 +376,14 @@ export default function ContactsPage() {
                         <ContactStatusBadge status={contact.status || "pending"} />
                       </td>
                       <td className="py-3 px-4 text-right">
-                        <ContactStatusSelect
-                          contactId={contact.id}
-                          currentStatus={contact.status || "pending"}
-                          onStatusChange={(newStatus) => handleStatusChange(contact.id, newStatus)}
-                        />
+                        <div className="flex items-center justify-end gap-2">
+                          <ContactDetailsModal contact={contact} />
+                          <ContactStatusSelect
+                            contactId={contact.id}
+                            currentStatus={contact.status || "pending"}
+                            onStatusChange={(newStatus) => handleStatusChange(contact.id, newStatus)}
+                          />
+                        </div>
                       </td>
                     </tr>
                   ))}

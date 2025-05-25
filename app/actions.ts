@@ -27,6 +27,14 @@ export async function saveContact(data: {
     await db.contact.create({
       data: {
         ...data,
+        email: data.email || "", // Garantir que email seja uma string
+        endereco: "", // Campo obrigatório
+        telefone: data.phone, // Usar o mesmo valor do phone
+        cpf: "", // Campo obrigatório
+        rg: "", // Campo obrigatório
+        dataExpedicao: "", // Campo obrigatório
+        orgao: "", // Campo obrigatório
+        cargoCpf: "", // Campo obrigatório
         status: "pending",
         createdAt: getTimestamp(),
         updatedAt: getTimestamp(),
@@ -49,7 +57,6 @@ export async function saveContact(data: {
 // Função para obter todos os contatos (para o painel admin)
 export async function getContacts() {
   try {
-    // Adicionar log para depuração
     console.log("Iniciando busca de contatos");
     
     try {
@@ -67,7 +74,18 @@ export async function getContacts() {
         return [];
       }
       
-      return contactsData;
+      // Garantir que todos os campos obrigatórios existam
+      return contactsData.filter(contact => contact !== null).map(contact => ({
+        ...contact,
+        name: contact?.name ?? '',
+        phone: contact?.phone ?? '',
+        email: contact?.email ?? '',
+        cep: contact?.cep ?? '',
+        interest: contact?.interest ?? '',
+        status: contact?.status ?? 'pending',
+        createdAt: contact?.createdAt ?? new Date(),
+        updatedAt: contact?.updatedAt ?? new Date()
+      }));
     } catch (dbError) {
       // Erros específicos de banco de dados
       if (dbError instanceof Error && dbError.message.includes("no such table")) {
@@ -78,8 +96,8 @@ export async function getContacts() {
       // Outros erros de banco de dados
       throw dbError;
     }
-  } catch (error) {
-    console.error("Erro ao buscar contatos:", error.message);
+  } catch (error: unknown) {
+    console.error("Erro ao buscar contatos:", error instanceof Error ? error.message : String(error));
     // Retornar array vazio em caso de erro para evitar quebrar a UI
     return [];
   }
@@ -148,6 +166,48 @@ export async function savePessoaFisica(data: Contact) {
     }
   } catch (error) {
     console.error("Erro ao salvar pessoa física:", error)
+    return {
+      success: false,
+      message: "Ocorreu um erro ao enviar seu cadastro. Por favor, tente novamente.",
+    }
+  }
+}
+
+export async function savePessoaJuridica(data: any) {
+  try {
+    // Salvar no Supabase
+    const { error, data: newData } = await supabase
+      .from("Contact")
+      .insert({
+        ...data,
+        phone: data.telefoneComercial,
+        telefone: data.telefoneComercial,
+        produto: data.produto || '',
+        name: data.name || '',
+        email: data.email || '',
+        endereco: data.endereco || '',
+        cpf: '', // Campo específico de pessoa física
+        rg: '', // Campo específico de pessoa física
+        dataExpedicao: '', // Campo específico de pessoa física
+        orgao: '', // Campo específico de pessoa física
+        cargoCpf: '', // Campo específico de pessoa física
+        status: "pending",
+        createdAt: getTimestamp(),
+        updatedAt: getTimestamp(),
+      })
+
+    console.log("DEBUG", newData)
+
+    if (error) {
+      throw error
+    }
+
+    return {
+      success: true,
+      message: "Cadastro enviado com sucesso! Em breve entraremos em contato.",
+    }
+  } catch (error) {
+    console.error("Erro ao salvar pessoa jurídica:", error)
     return {
       success: false,
       message: "Ocorreu um erro ao enviar seu cadastro. Por favor, tente novamente.",

@@ -9,43 +9,43 @@ export default function AdminDashboard() {
   const { user } = useAuth();
 
   // Inicializar contadores com valores padrão
-  const stats = [
-    {
-      title: "Pacotes",
-      value: 6,
-      icon: <Package className="h-5 w-5" />,
-      href: "/admin/packages",
-      color: "bg-blue-500",
-    },
-    {
-      title: "Canais",
-      value: 6,
-      icon: <Tv className="h-5 w-5" />,
-      href: "/admin/channels",
-      color: "bg-green-500",
-    },
-    {
-      title: "FAQs",
-      value: 5,
-      icon: <MessageSquare className="h-5 w-5" />,
-      href: "/admin/faqs",
-      color: "bg-purple-500",
-    },
-    {
-      title: "Depoimentos",
-      value: 4,
-      icon: <Users className="h-5 w-5" />,
-      href: "/admin/testimonials",
-      color: "bg-yellow-500",
-    },
-    {
-      title: "Slides",
-      value: 3,
-      icon: <Image className="h-5 w-5" />,
-      href: "/admin/slides",
-      color: "bg-red-500",
-    },
-  ]
+  // const stats = [
+  //   {
+  //     title: "Pacotes",
+  //     value: 6,
+  //     icon: <Package className="h-5 w-5" />,
+  //     href: "/admin/packages",
+  //     color: "bg-blue-500",
+  //   },
+  //   {
+  //     title: "Canais",
+  //     value: 6,
+  //     icon: <Tv className="h-5 w-5" />,
+  //     href: "/admin/channels",
+  //     color: "bg-green-500",
+  //   },
+  //   {
+  //     title: "FAQs",
+  //     value: 5,
+  //     icon: <MessageSquare className="h-5 w-5" />,
+  //     href: "/admin/faqs",
+  //     color: "bg-purple-500",
+  //   },
+  //   {
+  //     title: "Depoimentos",
+  //     value: 4,
+  //     icon: <Users className="h-5 w-5" />,
+  //     href: "/admin/testimonials",
+  //     color: "bg-yellow-500",
+  //   },
+  //   {
+  //     title: "Slides",
+  //     value: 3,
+  //     icon: <Image className="h-5 w-5" />,
+  //     href: "/admin/slides",
+  //     color: "bg-red-500",
+  //   },
+  // ]
 
   return (
     <div className="space-y-6">
@@ -59,7 +59,7 @@ export default function AdminDashboard() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
         {stats.map((stat) => (
           <Link key={stat.title} href={stat.href}>
             <Card className="hover:shadow-md transition-shadow">
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
             </Card>
           </Link>
         ))}
-      </div>
+      </div> */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card>

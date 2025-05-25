@@ -793,6 +793,7 @@ export type Package = {
   discount?: string
   tag?: string
   packageType: string
+  position: number
   createdAt: string
   updatedAt: string
 }
@@ -864,19 +865,14 @@ export type Setting = {
 
 export type NewSetting = Omit<Setting, "id" | "updatedAt">
 
-export type Contact = {
+// Base interface with common fields
+interface BaseContact {
   name: string
-  endereco?: string
-  cep: string
-  cnpj?: string
   email: string
   telefone: string
   phone: string
-  cpf: string
-  rg: string
-  dataExpedicao: string
-  orgao: string
-  cargoCpf: string
+  endereco?: string
+  cep: string
   produto?: string
   interest?: string
   status: string
@@ -884,6 +880,30 @@ export type Contact = {
   createdAt: string | Date
   updatedAt?: string | Date | null
 }
+
+// Interface for individual contacts (Pessoa Física)
+interface IndividualContact extends BaseContact {
+  type: 'individual'
+  cpf: string
+  rg: string
+  dataExpedicao: string
+  orgao: string
+  cargoCpf: string
+}
+
+// Interface for company contacts (Pessoa Jurídica)
+interface CompanyContact extends BaseContact {
+  type: 'company'
+  cnpj: string
+  razaoSocial: string
+  nomeFantasia?: string
+  inscricaoEstadual?: string
+  inscricaoMunicipal?: string
+  representanteLegal?: string
+  cargoRepresentante?: string
+}
+
+export type Contact = IndividualContact | CompanyContact
 
 export type NewContact = Omit<Contact, "id" | "createdAt" | "updatedAt">
 

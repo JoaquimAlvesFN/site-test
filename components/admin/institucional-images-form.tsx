@@ -121,6 +121,15 @@ export function InstitucionalImagesForm() {
     e.preventDefault()
     setIsSubmitting(true)
 
+    const heroData: any = {}
+      if (heroImages.heroImage) {
+        heroData.heroImage = heroImages.heroImage
+        heroData.heroImageAlt = heroImages.heroImageAlt
+        heroData.heroImageCaption = heroImages.heroImageCaption
+        heroData.heroImageLocation = heroImages.heroImageLocation
+      }
+      console.log(heroData, 'heroData')
+
     try {
       // Verificar se há imagens anexadas
       // const hasHeroImage = heroImages.heroImage && heroImages.heroImage !== "/placeholder.svg?height=600&width=800"
@@ -144,13 +153,6 @@ export function InstitucionalImagesForm() {
       // }
 
       // Update company info for hero section if values exist
-      const heroData: any = {}
-      if (heroImages.heroImage) {
-        heroData.heroImage = heroImages.heroImage
-        heroData.heroImageAlt = heroImages.heroImageAlt
-        heroData.heroImageCaption = heroImages.heroImageCaption
-        heroData.heroImageLocation = heroImages.heroImageLocation
-      }
       
       if (Object.keys(heroData).length > 0) {
         await updateCompanyInfo(heroData)

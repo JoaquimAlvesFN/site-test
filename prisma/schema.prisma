@@ -19,6 +19,7 @@ model Package {
   discount    String?
   tag         String?
   packageType String
+  position    Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -79,26 +80,40 @@ model Setting {
 }
 
 model Contact {
-  id            Int      @id @default(autoincrement())
-  name          String
-  endereco      String
-  cep           String
-  cnpj          String?
-  email         String
-  telefone      String
-  phone         String
-  cpf           String
-  rg            String
-  dataExpedicao String
-  orgao         String
-  cargoCpf      String
-  produto       String?
-  interest      String?
-  packageId     Int?
-  status        String   @default("pending")
-  notes         String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  telefone  String
+  status    String   @default("pending")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  nome_fantasia      String?
+  razao_social       String?
+  cnpj               String?
+  telefone_comercial String?
+  telefone_celular   String?
+  email_faturamento  String?
+  cep                String?
+  endereco           String?
+
+  responsavel_nome         String?
+  responsavel_cpf          String?
+  responsavel_rg           String?
+  responsavel_data_emissao DateTime? @default(now())
+  responsavel_orgao        String?
+  responsavel_nascimento   DateTime? @default(now())
+  responsavel_cargo        String?
+  responsavel_cep          String?
+  responsavel_endereco     String?
+
+  detalhes_contrato String?
+  quantidade_pontos Int?
+  pergunta          String?
+  produto           String?
+  interest          String?
+  packageId         Int?
 }
 
 model Image {

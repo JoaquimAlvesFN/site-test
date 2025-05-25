@@ -105,7 +105,7 @@ export function Footer() {
   const copyrightText = settings.copyright.replace("{year}", new Date().getFullYear().toString())
 
   return (
-    <footer className="bg-[#00205B] text-slate-200 py-12">
+    <footer className="bg-[#E30613] text-black font-semibold py-12">
       <div className="container">
         <div className="flex flex-row justify-between md:grid-cols-4 gap-8">
           <div>
@@ -114,27 +114,27 @@ export function Footer() {
               fallbackSrc="https://sjc.microlink.io/EVPkxg5JrNWxZNP9AWwi5KRkyc0EaklEAI0j6mP3BLANnvCK51AwejCcuTRPp1RtaCoUH-vI4pLeAn4KL4YmWQ.jpeg"
               className="h-10 w-auto mb-4 brightness-0 invert"
             />
-            <p className="text-sm text-slate-400 mt-4">{settings.company.description}</p>
+            <p className="text-sm text-black mt-4">{settings.company.description}</p>
           </div>
           <div>
             <h3 className="font-bold text-lg mb-4">{settings.contact.title}</h3>
             <ul className="space-y-2">
-              <li className="flex items-center gap-2">
-                <span className="text-sm text-slate-400">{settings.contact.salesLabel}</span>
+              {/* <li className="flex items-center gap-2">
+                <span className="text-sm text-black">{settings.contact.salesLabel}</span>
                 <Link
                   href={`tel:${settings.contact.salesPhone.replace(/\D/g, "")}`}
-                  className="text-sm text-white font-bold"
+                  className="text-sm text-black font-bold"
                 >
                   {settings.contact.salesPhone}
                 </Link>
-              </li>
+              </li> */}
               <li className="flex items-center gap-2">
-                <span className="text-sm text-slate-400">{settings.contact.supportLabel}</span>
+                <span className="text-sm text-black">{settings.contact.supportLabel}</span>
                 <Link
-                  href={`tel:${settings.contact.supportPhone.replace(/\D/g, "")}`}
-                  className="text-sm text-white font-bold"
+                  href={`tel:08007252880`}
+                  className="text-sm text-black font-bold"
                 >
-                  {settings.contact.supportPhone}
+                   0800 725 2880
                 </Link>
               </li>
             </ul>
@@ -142,7 +142,7 @@ export function Footer() {
               <Link
                 href={`https://wa.me/${settings.contact.whatsapp}`}
                 target="_blank"
-                className="inline-flex items-center gap-2 bg-green-600 text-white px-4 py-2 rounded-md text-sm"
+                className="inline-flex items-center gap-2 bg-green-600 text-black px-4 py-2 rounded-md text-sm"
               >
                 <Zap className="h-4 w-4" />
                 Atendimento via WhatsApp
@@ -150,7 +150,7 @@ export function Footer() {
             </div>
           </div>
         </div>
-        <div className="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-slate-400">
+        <div className="border-t border-slate-800 mt-8 pt-8 text-center text-sm text-black">
           <p>{copyrightText}</p>
         </div>
       </div>

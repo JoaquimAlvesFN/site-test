@@ -32,6 +32,7 @@ export function PackageForm({ packageData }: PackageFormProps) {
     discount: packageData?.discount || "",
     tag: packageData?.tag || "",
     packageType: packageData?.packageType || "pos-pago",
+    position: packageData?.position || 0,
   })
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) {
@@ -146,6 +147,20 @@ export function PackageForm({ packageData }: PackageFormProps) {
         <div>
           <Label htmlFor="tag">Tag (opcional)</Label>
           <Input id="tag" name="tag" value={formData.tag} onChange={handleChange} placeholder="MAIS VENDIDO" />
+        </div>
+
+        <div>
+          <Label htmlFor="position">Posição</Label>
+          <Input 
+            id="position" 
+            name="position" 
+            type="number" 
+            value={formData.position} 
+            onChange={handleChange} 
+            placeholder="0"
+            min="0"
+          />
+          <p className="text-sm text-muted-foreground mt-1">Ordem de exibição do pacote (menor número aparece primeiro)</p>
         </div>
 
         <div className="flex items-center space-x-2">

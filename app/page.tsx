@@ -88,14 +88,13 @@ export default async function Home() {
               title="Assine SKY"
               description="Preencha seus dados para assinar um dos nossos planos. Nossa equipe entrará em contato em breve."
             /> */}
-            <Link
+            {/* <Link
               href={`#contact`}
             >
               <Button className="bg-[#E30613] hover:bg-[#c00511]">Assinar Agora</Button>
-            </Link>
+            </Link> */}
             <Link
               href={`https://wa.me/${settings.footer_contact_whatsapp}`}
-              // href={`https://wa.me/5511999999999`}
               target="_blank"
               className="flex items-center justify-center rounded-full bg-green-500 p-2 md:hidden"
             >
@@ -222,9 +221,9 @@ export default async function Home() {
               </p>
             </div>
 
-            {/* <Suspense fallback={<div>Carregando...</div>}> */}
+            <Suspense fallback={<div>Carregando...</div>}>
               <ChannelGrid />
-            {/* </Suspense> */}
+            </Suspense>
 
             <div className="mt-12 text-center">
               {/* <ContactModal

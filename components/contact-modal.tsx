@@ -12,7 +12,9 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { PessoaFisicaForm } from "@/components/pessoa-fisica-form"
+import { PessoaJuridicaForm } from "@/components/pessoa-juridica-form"
 import { toast } from "@/components/ui/use-toast"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface ContactModalProps {
   trigger: React.ReactNode
@@ -21,6 +23,7 @@ interface ContactModalProps {
   packageId?: number
   defaultInterest?: "tv" | "internet" | "combo"
   produto?: string
+  tipoPessoa?: 'fisica' | 'juridica'
 }
 
 export function ContactModal({
@@ -30,8 +33,10 @@ export function ContactModal({
   packageId,
   defaultInterest = "tv",
   produto,
+  tipoPessoa: initialTipoPessoa,
 }: ContactModalProps) {
   const [open, setOpen] = useState(false)
+  const [tipoPessoa, setTipoPessoa] = useState<'fisica' | 'juridica'>(initialTipoPessoa || 'fisica')
 
   function handleSuccess() {
     // Mostrar toast de sucesso
@@ -54,9 +59,19 @@ export function ContactModal({
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
+          <Tabs value={tipoPessoa} onValueChange={(value) => setTipoPessoa(value as 'fisica' | 'juridica')} className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="fisica">Pessoa Física</TabsTrigger>
+              <TabsTrigger value="juridica">Pessoa Jurídica</TabsTrigger>
+            </TabsList>
+          </Tabs>
         </DialogHeader>
         <div className="py-4 max-h-[70vh] overflow-y-auto">
-          <PessoaFisicaForm onSuccess={handleSuccess} produto={produto} />
+          {tipoPessoa === 'juridica' ? (
+            <PessoaJuridicaForm onSuccess={handleSuccess} produto={produto} />
+          ) : (
+            <PessoaFisicaForm onSuccess={handleSuccess} produto={produto} />
+          )}
         </div>
       </DialogContent>
     </Dialog>

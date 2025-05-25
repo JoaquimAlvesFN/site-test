@@ -8,16 +8,16 @@ interface FeatureProps {
 }
 
 const iconMap: Record<string, React.ReactNode> = {
-  Tv: <Tv className="h-10 w-10" />,
-  Play: <Play className="h-10 w-10" />,
-  Shield: <Shield className="h-10 w-10" />,
+  Tv: <Tv className="h-10 w-10 text-[#E30613]" />,
+  Play: <Play className="h-10 w-10 text-[#E30613]" />,
+  Shield: <Shield className="h-10 w-10 text-[#E30613]" />,
 }
 
 function FeatureCard({ title, description, icon }: FeatureProps) {
   return (
     <div className="flex flex-col items-center text-center">
-      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-        {iconMap[icon] || <Shield className="h-10 w-10" />}
+      <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-[#E30613]">
+        {iconMap[icon] || <Shield className="h-10 w-10 text-[#E30613]" />}
       </div>
       <h3 className="mb-2 text-xl font-semibold text-gray-900">{title}</h3>
       <p className="text-gray-600">{description}</p>
@@ -38,8 +38,8 @@ export function WhyChooseSection() {
     },
     {
       id: 2,
-      title: "SKY Play Incluso",
-      description: "Assista onde e quando quiser pelo aplicativo SKY Play, disponível para todos os assinantes.",
+      title: "SKY+ Incluso",
+      description: "Assista onde e quando quiser pelo aplicativo SKY+, disponível para todos os assinantes.",
       icon: "Play",
       order: 2,
       active: true,

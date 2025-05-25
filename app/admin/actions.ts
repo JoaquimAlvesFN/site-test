@@ -597,11 +597,12 @@ export async function getCompanyInfo() {
 
 // Função para atualizar as informações da empresa
 export async function updateCompanyInfo(data: any) {
-  try {
+  console.log(data, 'data update company info')
+  // try {
     // Validar os dados recebidos
-    if (!data) {
-      throw new Error("Dados inválidos")
-    }
+    // if (!data) {
+    //   throw new Error("Dados inválidos")
+    // }
 
     // Preparar os dados para salvar
     const companyData = {
@@ -619,8 +620,12 @@ export async function updateCompanyInfo(data: any) {
       updatedAt: new Date()
     }
 
+    console.log(companyData, 'companyData')
+
     // Buscar registro existente
     const existingInfo = await db.companyInfo.findFirst()
+
+    try {
 
     if (!existingInfo) {
       // Criar novo registro
@@ -1830,87 +1835,14 @@ export async function updateBusinessSection(data: any) {
 // Função para obter os pacotes ativos
 export async function getActivePackages() {
   try {
-    // Dados estáticos para garantir que a função sempre retorne um array válido
-    // const staticPackages = [
-    //   {
-    //     id: 1,
-    //     title: "SKY Essencial",
-    //     price: "89,90",
-    //     description: "Pacote básico com os principais canais",
-    //     features: ["60+ canais", "SKY Play incluso", "Instalação grátis", "Sem fidelidade"],
-    //     popular: false,
-    //     recurrent: true,
-    //     packageType: "pos-pago",
-    //     createdAt: "2023-04-15T10:30:00.000Z",
-    //     updatedAt: "2023-04-15T10:30:00.000Z",
-    //   },
-    //   {
-    //     id: 2,
-    //     title: "SKY HD",
-    //     price: "129,90",
-    //     description: "Pacote intermediário com canais em HD",
-    //     features: ["100+ canais", "Canais em HD", "SKY Play incluso", "Instalação grátis"],
-    //     popular: true,
-    //     recurrent: true,
-    //     discount: "20% OFF por 3 meses",
-    //     tag: "MAIS VENDIDO",
-    //     packageType: "pos-pago",
-    //     createdAt: "2023-04-15T10:30:00.000Z",
-    //     updatedAt: "2023-04-15T10:30:00.000Z",
-    //   },
-    //   {
-    //     id: 3,
-    //     title: "SKY Premium",
-    //     price: "189,90",
-    //     description: "Pacote completo com todos os canais",
-    //     features: ["150+ canais", "Canais premium", "SKY Play incluso", "Instalação grátis"],
-    //     popular: false,
-    //     recurrent: true,
-    //     packageType: "pos-pago",
-    //     createdAt: "2023-04-15T10:30:00.000Z",
-    //     updatedAt: "2023-04-15T10:30:00.000Z",
-    //   },
-    //   {
-    //     id: 4,
-    //     title: "SKY Pré HD",
-    //     price: "69,90",
-    //     description: "Recarga mensal com canais em HD",
-    //     features: ["80+ canais", "Canais em HD", "Sem análise de crédito", "Sem mensalidade"],
-    //     popular: false,
-    //     recurrent: false,
-    //     packageType: "pre-pago",
-    //     createdAt: "2023-04-15T10:30:00.000Z",
-    //     updatedAt: "2023-04-15T10:30:00.000Z",
-    //   },
-    //   {
-    //     id: 5,
-    //     title: "SKY Pré Básico",
-    //     price: "49,90",
-    //     description: "Recarga mensal com canais básicos",
-    //     features: ["50+ canais", "Sem análise de crédito", "Sem mensalidade", "Recarregue quando quiser"],
-    //     popular: true,
-    //     tag: "ECONÔMICO",
-    //     recurrent: false,
-    //     packageType: "pre-pago",
-    //     createdAt: "2023-04-15T10:30:00.000Z",
-    //     updatedAt: "2023-04-15T10:30:00.000Z",
-    //   },
-    // ]
-
-    // Tentar obter os pacotes do banco de dados
-    const result = await db.package.findMany()
-    // .select().from(packages)
-
-    // Se o banco de dados retornar dados válidos, use-os
-    // if (Array.isArray(result) && result.length > 0) {
-    //   return result
-    // }
-
-    // Caso contrário, use os dados estáticos
+    const result = await db.package.findMany({
+      orderBy: {
+        position: 'asc'
+      }
+    });
     return result
   } catch (error) {
     console.error("Error fetching active packages:", error)
-    // Em caso de erro, retornar um array vazio para evitar quebrar a UI
     return []
   }
 }

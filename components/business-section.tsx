@@ -4,6 +4,8 @@ import { Building2, Users, BarChart, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { getBusinessSection } from "@/app/admin/actions"
+import { ContactModal } from "./contact-modal"
+import { cn } from "@/lib/utils"
 
 export async function BusinessSection() {
   // Buscar os dados da seção de negócios do banco de dados
@@ -63,9 +65,22 @@ export async function BusinessSection() {
               ))}
             </div>
 
-            <Button className="bg-[#E30613] hover:bg-[#E30613]" asChild>
+            <ContactModal
+              trigger={
+                <Button className="bg-[#E30613] hover:bg-[#E30613]">{sectionData.cta}</Button>
+              }
+
+              title="Solicitar Proposta Comercial"
+              // description={`Preencha seus dados para assinar o pacote ${title}. Nossa equipe entrará em contato em breve.`}
+              // packageId={packageId}
+              // defaultInterest={title.toLowerCase().includes("internet") ? "internet" : "tv"}
+              // produto={`${title} - ${price}`}
+              tipoPessoa="juridica"
+            />
+
+            {/* <Button className="bg-[#E30613] hover:bg-[#E30613]" asChild>
               <Link href={sectionData.ctaLink}>{sectionData.cta}</Link>
-            </Button>
+            </Button> */}
           </div>
 
           {/* <div className="order-1 lg:order-2">

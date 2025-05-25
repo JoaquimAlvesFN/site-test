@@ -73,6 +73,9 @@ export default async function InstitucionalPage() {
   const companyValuesData = await getCompanyValues();
   const teamMembersData = await getTeamMembers();
 
+  console.log(companyInfoData)
+  console.log(settingsData)
+
   // Garantir que os dados sejam do tipo correto ou usar fallbacks
   const companyInfo: CompanyInfo = companyInfoData || {};
   const facilities = (Array.isArray(facilitiesData) ? facilitiesData : []) as CompanyFacility[];

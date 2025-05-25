@@ -8,17 +8,17 @@ interface QuickFeatureProps {
 }
 
 const iconMap: Record<string, React.ReactNode> = {
-  Shield: <Shield className="h-6 w-6" />,
-  Play: <Play className="h-6 w-6" />,
-  Tv: <Tv className="h-6 w-6" />,
-  MapPin: <MapPin className="h-6 w-6" />,
+  Shield: <Shield className="h-6 w-6 text-[#E30613]" />,
+  Play: <Play className="h-6 w-6 text-[#E30613]" />,
+  Tv: <Tv className="h-6 w-6 text-[#E30613]" />,
+  MapPin: <MapPin className="h-6 w-6 text-[#E30613]" />,
 }
 
 function QuickFeatureCard({ title, description, icon }: QuickFeatureProps) {
   return (
     <div className="flex items-center gap-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 text-sky-600">
-        {iconMap[icon] || <Shield className="h-6 w-6" />}
+      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-[#E30613]">
+        {iconMap[icon] || <Shield className="h-6 w-6 text-[#E30613]" />}
       </div>
       <div>
         <h3 className="font-medium text-gray-900">{title}</h3>
@@ -42,7 +42,7 @@ export function QuickFeatures() {
     },
     {
       id: 2,
-      title: "SKY Play Grátis",
+      title: "SKY+ Grátis",
       description: "Assista onde quiser",
       icon: "Play",
       order: 2,

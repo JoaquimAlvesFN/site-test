@@ -20,8 +20,8 @@ export function FloatingWhatsApp() {
   const whatsappNumber = settings?.footer_contact_whatsapp || "5511999999999"
 
   return (
-    <div className="fixed bottom-4 right-4 z-50">
-      {isOpen && (
+    <div className="fixed bottom-10 right-4 z-50 mb-4 p-4 rounded-lg w-25">
+      {/* {isOpen && (
         <div className="mb-4 p-4 bg-white rounded-lg shadow-lg w-64 border border-gray-200 relative">
           <button
             onClick={() => setIsOpen(false)}
@@ -34,7 +34,15 @@ export function FloatingWhatsApp() {
           <p className="text-sm text-gray-600 mb-3">
             Quer saber mais sobre os pacotes SKY? Fale com um de nossos consultores.
           </p>
-          <Link
+          
+        </div>
+      )} */}
+      {/* <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
+        aria-label="WhatsApp"
+      > */}
+        <Link
             href={`https://wa.me/${whatsappNumber}?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20pacotes%20SKY`}
             className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2 text-sm"
             target="_blank"
@@ -42,17 +50,8 @@ export function FloatingWhatsApp() {
             onClick={handleWhatsAppClick}
           >
             <Zap className="h-4 w-4" />
-            Iniciar Conversa
           </Link>
-        </div>
-      )}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-full shadow-lg flex items-center justify-center"
-        aria-label="WhatsApp"
-      >
-        <Zap className="h-6 w-6" />
-      </button>
+      {/* </button> */}
     </div>
   )
 }
