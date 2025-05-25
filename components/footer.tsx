@@ -139,14 +139,14 @@ export function Footer() {
               </li>
             </ul>
             <div className="mt-4">
-              <Link
+              {/* <Link
                 href={`https://wa.me/${settings.contact.whatsapp}`}
                 target="_blank"
                 className="inline-flex items-center gap-2 bg-green-600 text-black px-4 py-2 rounded-md text-sm"
               >
                 <Zap className="h-4 w-4" />
                 Atendimento via WhatsApp
-              </Link>
+              </Link> */}
             </div>
           </div>
         </div>

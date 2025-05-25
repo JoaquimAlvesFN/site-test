@@ -36,7 +36,7 @@ export async function BusinessSection() {
     <section id="business" className="py-16 bg-slate-50">
       <div className="container">
         <div className="text-center mb-12">
-          <div className="inline-block bg-[#00205B]/10 px-4 py-1 rounded-full text-[#00205B] text-sm font-medium mb-4">
+          <div className="inline-block bg-[#FF0000]/10 px-4 py-1 rounded-full text-[#FF0000] text-sm font-medium mb-4">
             {sectionData.subtitle}
           </div>
           <h2 className="text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">{sectionData.title}</h2>
