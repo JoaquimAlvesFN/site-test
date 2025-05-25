@@ -93,14 +93,14 @@ export default async function Home() {
             >
               <Button className="bg-[#E30613] hover:bg-[#c00511]">Assinar Agora</Button>
             </Link> */}
-            <Link
+            {/* <Link
               href={`https://wa.me/${settings.footer_contact_whatsapp}`}
               target="_blank"
               className="flex items-center justify-center rounded-full bg-green-500 p-2 md:hidden"
             >
               <Zap className="h-5 w-5 text-white" />
               <span className="sr-only">WhatsApp</span>
-            </Link>
+            </Link> */}
           </div>
         </div>
       </header>
