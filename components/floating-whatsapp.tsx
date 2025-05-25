@@ -6,6 +6,7 @@ import { Zap, X } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
 import { useQuery } from "@tanstack/react-query"
 import { supabaseQueries } from "@/lib/supabase-queries"
+import { FaWhatsapp } from "react-icons/fa"
 
 function handleWhatsAppClick() {
   toast({
@@ -44,12 +45,13 @@ export function FloatingWhatsApp() {
       > */}
         <Link
             href={`https://wa.me/${whatsappNumber}?text=Olá,%20gostaria%20de%20saber%20mais%20sobre%20os%20pacotes%20SKY`}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded flex items-center justify-center gap-2 text-sm"
+            className="bg-[#E30613] hover:bg-red-700 text-white py-3 px-8 rounded-full flex items-center justify-center gap-2 text-base font-semibold shadow-lg"
             target="_blank"
             rel="noopener noreferrer"
             onClick={handleWhatsAppClick}
           >
-            <Zap className="h-4 w-4" />
+            <FaWhatsapp className="h-5 w-5" />
+            Compre por aqui
           </Link>
       {/* </button> */}
     </div>
