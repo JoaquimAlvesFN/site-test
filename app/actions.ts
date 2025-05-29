@@ -180,7 +180,6 @@ export async function savePessoaJuridica(data: any) {
       .from("Contact")
       .insert({
         ...data,
-        phone: data.telefoneComercial,
         telefone: data.telefoneComercial,
         produto: data.produto || '',
         name: data.name || '',

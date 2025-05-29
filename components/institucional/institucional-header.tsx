@@ -39,7 +39,7 @@ export function InstitucionalHeader() {
             </Link>
           </nav>
         </div>
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center">
             <Phone className="h-4 w-4 text-[#E30613] mr-1" />
             <Link href="tel:08006004990" className="text-sm font-bold hover:text-[#E30613]">
@@ -60,7 +60,7 @@ export function InstitucionalHeader() {
           >
             {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
           </Button>
-        </div>
+        </div> */}
       </div>
 
       {/* Mobile Menu */}
@@ -74,13 +74,13 @@ export function InstitucionalHeader() {
             >
               Início
             </Link>
-            <Link
+            {/* <Link
               href="#nossa-historia"
               className="text-sm font-medium transition-colors hover:text-[#E30613] p-2"
               onClick={() => setIsMenuOpen(false)}
             >
               Nossa História
-            </Link>
+            </Link> */}
             <Link
               href="/institucional"
               className="text-sm font-medium text-[#E30613] p-2"
@@ -95,7 +95,7 @@ export function InstitucionalHeader() {
             >
               Pacotes
             </Link>
-            <Link
+            {/* <Link
               href="/#contact"
               className="text-sm font-medium transition-colors hover:text-[#E30613] p-2"
               onClick={() => setIsMenuOpen(false)}
@@ -112,7 +112,7 @@ export function InstitucionalHeader() {
               trigger={<Button className="bg-[#E30613] hover:bg-[#c00511] w-full">Fale Conosco</Button>}
               title="Fale Conosco"
               description="Preencha seus dados para entrar em contato com nossa equipe. Responderemos o mais breve possível."
-            />
+            /> */}
           </nav>
         </div>
       )}

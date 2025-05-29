@@ -61,8 +61,8 @@ export function ContactModal({
           <DialogDescription>{description}</DialogDescription>
           <Tabs value={tipoPessoa} onValueChange={(value) => setTipoPessoa(value as 'fisica' | 'juridica')} className="w-full">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="fisica">Pessoa Física</TabsTrigger>
-              <TabsTrigger value="juridica">Pessoa Jurídica</TabsTrigger>
+              <TabsTrigger value="fisica" disabled={tipoPessoa !== 'fisica'}>Pessoa Física</TabsTrigger>
+              <TabsTrigger value="juridica" disabled={tipoPessoa !== 'juridica'}>Pessoa Jurídica</TabsTrigger>
             </TabsList>
           </Tabs>
         </DialogHeader>

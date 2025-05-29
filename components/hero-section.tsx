@@ -91,14 +91,24 @@ export function HeroSection() {
     }
   }, [api])
 
+  // Autoplay: avança automaticamente a cada 5 segundos
+  useEffect(() => {
+    if (!api) return;
+    const interval = setInterval(() => {
+      if (api) {
+        api.scrollNext();
+      }
+    }, 5000); // 5 segundos
+    return () => clearInterval(interval);
+  }, [api]);
+
   // Renderizar o skeleton durante o carregamento
   if (isLoading || isLoadingHeroImages) {
     return (
-      <section className="relative overflow-hidden bg-slate-100">
-        <div className="container relative z-10 py-8 md:py-12">
-          <Skeleton className="h-[400px] w-full max-w-6xl mx-auto rounded-lg bg-slate-200" />
+      <section className="relative overflow-hidden bg-black">
+        <div className="w-full h-[400px] flex items-center justify-center">
+          <Skeleton className="h-full w-full rounded-none bg-slate-200" />
         </div>
-
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
           {[1, 2, 3].map((_, i) => (
             <div key={i} className="w-3 h-3 rounded-full bg-slate-300" />
@@ -110,10 +120,10 @@ export function HeroSection() {
 
   // Renderizar o conteúdo real quando estiver carregado
   return (
-    <section className="overflow-hidden bg-gradient-to-b from-slate-100 to-slate-200">
-      <div className="container z-10 pb-0 pt-8 md:pt-12 md:pb-2 flex items-center justify-center">
+    <section className="overflow-hidden bg-black">
+      <div className="w-full h-[420px] flex items-center justify-center p-0 m-0">
         <Carousel 
-          className="w-full" 
+          className="w-full h-full" 
           opts={{
             loop: true,
             align: "center",
@@ -122,25 +132,36 @@ export function HeroSection() {
         >
           <CarouselContent>
             {slides.map((slide) => (
-              <CarouselItem key={slide.id} className="flex justify-center">
-                <div className="relative aspect-[21/9] w-full max-w-6xl">
-                  <Link href="#contact">
+              <CarouselItem key={slide.id} className="flex justify-center items-center w-full h-full p-0 m-0">
+                <div className="relative w-full h-[420px]">
+                  <button
+                    type="button"
+                    className="w-full h-full p-0 m-0 border-0 bg-transparent cursor-pointer focus:outline-none"
+                    onClick={() => {
+                      const el = document.getElementById('tv-packages');
+                      if (el) {
+                        el.scrollIntoView({ behavior: 'smooth' });
+                        // Foca no primeiro botão de tabs se desejar
+                        const tabBtn = el.querySelector('[role="tab"]');
+                        if (tabBtn) (tabBtn as HTMLElement).focus();
+                      }
+                    }}
+                  >
                     <OptimizedImage
                       src={slide.image || "/placeholder.svg"}
                       alt={slide.title || "Banner image"}
                       width={1920}
-                      height={1080}
-                      className="object-cover w-full h-full rounded-lg shadow-lg"
+                      height={420}
+                      className="object-cover w-full h-full rounded-none shadow-none"
                       priority={true}
                       quality={90}
                       loading="eager"
                     />
-                  </Link>
+                  </button>
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-          
           <div className="flex items-center justify-center gap-2 mt-6">
             {slides.map((_, i) => (
               <button
@@ -156,8 +177,8 @@ export function HeroSection() {
           {
             slides.length > 1 && (
               <>
-                <CarouselPrevious className="absolute -left-4 sm:left-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
-                <CarouselNext className="absolute -right-4 sm:right-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
+                <CarouselPrevious className="absolute left-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
+                <CarouselNext className="absolute right-4 bg-white/70 hover:bg-white/90 border-none text-slate-800" />
               </>
             )
           }
