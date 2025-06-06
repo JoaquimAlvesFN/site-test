@@ -54,18 +54,18 @@ export function AdminSidebar() {
       href: "/admin/faqs",
       icon: <MessageSquare className="h-5 w-5" />,
     },
-    {
-      title: "Depoimentos",
-      href: "/admin/testimonials",
-      icon: <Users className="h-5 w-5" />,
-    },
+    // {
+    //   title: "Depoimentos",
+    //   href: "/admin/testimonials",
+    //   icon: <Users className="h-5 w-5" />,
+    // },
     {
       title: "Slides",
       href: "/admin/slides",
       icon: <Image className="h-5 w-5" />,
     },
     {
-      title: "Contatos",
+      title: "CRM",
       href: "/admin/contacts",
       icon: <PhoneCall className="h-5 w-5" />,
     },
@@ -74,11 +74,11 @@ export function AdminSidebar() {
       href: "/admin/images",
       icon: <ImageIcon className="h-5 w-5" />,
     },
-    {
-      title: "Rodapé",
-      href: "/admin/footer",
-      icon: <FootprintsIcon className="h-5 w-5" />,
-    },
+    // {
+    //   title: "Rodapé",
+    //   href: "/admin/footer",
+    //   icon: <FootprintsIcon className="h-5 w-5" />,
+    // },
     {
       title: "Institucional",
       href: "/admin/institucional",

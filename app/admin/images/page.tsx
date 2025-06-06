@@ -10,6 +10,7 @@ import Image from "next/image"
 import { ImageDeleteButton } from "@/components/admin/image-delete-button"
 import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
+import { StorageUsage } from "@/components/admin/storage-usage"
 
 export default function ImagesPage() {
   requireAuth()
@@ -42,6 +43,8 @@ export default function ImagesPage() {
           Atualizar
         </Button>
       </div>
+
+      <StorageUsage />
 
       <Card>
         <CardHeader>

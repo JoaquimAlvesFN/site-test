@@ -26,6 +26,7 @@ type HeroSlide = {
   price: string
   cta: string
   image: string
+  imageMobile?: string
   features: string
   tag?: string | null
   speedBadge?: string | null
@@ -40,6 +41,23 @@ export function HeroSection() {
   const [slides, setSlides] = useState<HeroSlide[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [api, setApi] = useState<any>(null)
+  const [isMobile, setIsMobile] = useState(false)
+
+  // Detect mobile screens
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768)
+    }
+    
+    // Check initially
+    checkMobile()
+    
+    // Add resize listener
+    window.addEventListener('resize', checkMobile)
+    
+    // Cleanup
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   // Buscar imagens do hero usando React Query com cache otimizado
   const { data: heroImages, isLoading: isLoadingHeroImages } = useQuery({
@@ -121,7 +139,7 @@ export function HeroSection() {
   // Renderizar o conteúdo real quando estiver carregado
   return (
     <section className="overflow-hidden bg-black">
-      <div className="w-full h-[420px] flex items-center justify-center p-0 m-0">
+      <div className="w-full h-[600px] flex items-center justify-center p-0 m-0">
         <Carousel 
           className="w-full h-full" 
           opts={{
@@ -133,7 +151,7 @@ export function HeroSection() {
           <CarouselContent>
             {slides.map((slide) => (
               <CarouselItem key={slide.id} className="flex justify-center items-center w-full h-full p-0 m-0">
-                <div className="relative w-full h-[420px]">
+                <div className="relative w-full h-[600px]">
                   <button
                     type="button"
                     className="w-full h-full p-0 m-0 border-0 bg-transparent cursor-pointer focus:outline-none"
@@ -148,10 +166,10 @@ export function HeroSection() {
                     }}
                   >
                     <OptimizedImage
-                      src={slide.image || "/placeholder.svg"}
+                      src={isMobile && slide.imageMobile ? slide.imageMobile : slide.image || "/placeholder.svg"}
                       alt={slide.title || "Banner image"}
                       width={1920}
-                      height={420}
+                      height={600}
                       className="object-cover w-full h-full rounded-none shadow-none"
                       priority={true}
                       quality={90}

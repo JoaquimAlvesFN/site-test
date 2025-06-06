@@ -15,14 +15,14 @@ export default function InstitucionalAdminPage() {
         <p className="text-muted-foreground">Gerencie o conteúdo da página institucional</p>
       </div>
 
-      <Tabs defaultValue="history" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-8">
-          <TabsTrigger value="history">História e Valores</TabsTrigger>
-          <TabsTrigger value="team">Equipe</TabsTrigger>
-          <TabsTrigger value="images">Imagens</TabsTrigger>
-        </TabsList>
+      {/* <Tabs defaultValue="history" className="w-full"> */}
+        {/* <TabsList className="grid w-full grid-cols-3 mb-8"> */}
+          {/* <TabsTrigger value="history">História e Valores</TabsTrigger>
+          <TabsTrigger value="team">Equipe</TabsTrigger> */}
+          {/* <TabsTrigger value="images">Imagens</TabsTrigger> */}
+        {/* </TabsList> */}
 
-        <TabsContent value="history">
+        {/* <TabsContent value="history">
           <Card>
             <CardHeader>
               <CardTitle>História e Valores</CardTitle>
@@ -31,9 +31,9 @@ export default function InstitucionalAdminPage() {
               <InstitucionalHistoryForm />
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
 
-        <TabsContent value="team">
+        {/* <TabsContent value="team">
           <Card>
             <CardHeader>
               <CardTitle>Equipe</CardTitle>
@@ -42,9 +42,9 @@ export default function InstitucionalAdminPage() {
               <InstitucionalTeamForm />
             </CardContent>
           </Card>
-        </TabsContent>
+        </TabsContent> */}
 
-        <TabsContent value="images">
+        {/* <TabsContent value="images"> */}
           <Card>
             <CardHeader>
               <CardTitle>Imagens da Empresa</CardTitle>
@@ -53,8 +53,8 @@ export default function InstitucionalAdminPage() {
               <InstitucionalImagesForm />
             </CardContent>
           </Card>
-        </TabsContent>
-      </Tabs>
+        {/* </TabsContent> */}
+      {/* </Tabs> */}
     </div>
   )
 }

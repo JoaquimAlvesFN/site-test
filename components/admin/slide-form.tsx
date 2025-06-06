@@ -37,6 +37,7 @@ export function SlideForm({ slideData }: SlideFormProps) {
     price: slideData?.price || defaultPrice,
     cta: slideData?.cta || defaultCta,
     image: slideData?.image || "/placeholder.svg?height=600&width=800",
+    mobileImage: slideData?.mobileImage || "/placeholder.svg?height=600&width=800",
     tag: slideData?.tag || "",
     speedBadge: slideData?.speedBadge || "",
     order: slideData?.order || 1,
@@ -54,6 +55,10 @@ export function SlideForm({ slideData }: SlideFormProps) {
 
   function handleImageChange(url: string) {
     setFormData((prev) => ({ ...prev, image: url }))
+  }
+
+  function handleMobileImageChange(url: string) {
+    setFormData((prev) => ({ ...prev, mobileImage: url }))
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -107,21 +112,21 @@ export function SlideForm({ slideData }: SlideFormProps) {
             <CardContent className="pt-6">
               <div className="space-y-6">
                 <div>
-                  <Label className="text-lg font-medium">Imagem do Carrossel</Label>
+                  <Label className="text-lg font-medium">Imagem do Carrossel (Desktop)</Label>
                   <p className="text-sm text-muted-foreground mb-4">
-                    Selecione uma imagem para exibir no carrossel da página inicial.
+                    Selecione uma imagem para exibir no carrossel da página inicial em dispositivos desktop.
                   </p>
                   <div className="border rounded-lg p-4 bg-gradient-to-r from-slate-50 to-slate-100">
                     <ImageSelector 
                       value={formData.image} 
                       onChange={handleImageChange} 
-                      label="Selecionar Imagem"
+                      label="Selecionar Imagem Desktop"
                     />
                     {formData.image && (
                       <div className="mt-4 relative aspect-video">
                         <Image 
                           src={formData.image} 
-                          alt="Preview da imagem" 
+                          alt="Preview da imagem desktop" 
                           className="rounded-md object-cover shadow-md"
                           fill
                           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -131,6 +136,34 @@ export function SlideForm({ slideData }: SlideFormProps) {
                   </div>
                   <p className="text-sm text-muted-foreground mt-2">
                     Recomendado: Imagem de alta qualidade com resolução mínima de 1200x800px
+                  </p>
+                </div>
+
+                <div>
+                  <Label className="text-lg font-medium">Imagem do Carrossel (Mobile)</Label>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Selecione uma imagem para exibir no carrossel da página inicial em dispositivos móveis.
+                  </p>
+                  <div className="border rounded-lg p-4 bg-gradient-to-r from-slate-50 to-slate-100">
+                    <ImageSelector 
+                      value={formData.mobileImage} 
+                      onChange={handleMobileImageChange} 
+                      label="Selecionar Imagem Mobile"
+                    />
+                    {formData.mobileImage && (
+                      <div className="mt-4 relative aspect-video">
+                        <Image 
+                          src={formData.mobileImage} 
+                          alt="Preview da imagem mobile" 
+                          className="rounded-md object-cover shadow-md"
+                          fill
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        />
+                      </div>
+                    )}
+                  </div>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Recomendado: Imagem de alta qualidade com resolução mínima de 800x1200px
                   </p>
                 </div>
 
@@ -192,7 +225,16 @@ export function SlideForm({ slideData }: SlideFormProps) {
               <div className="max-w-3xl mx-auto relative aspect-[21/9]">
                 <Image
                   src={formData.image || "/placeholder.svg"}
-                  alt="Preview da imagem do carrossel"
+                  alt="Preview da imagem do carrossel (Desktop)"
+                  className="object-cover rounded-lg shadow-lg"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+              <div className="mt-6 max-w-xs mx-auto relative aspect-[9/16]">
+                <Image
+                  src={formData.mobileImage || "/placeholder.svg"}
+                  alt="Preview da imagem do carrossel (Mobile)"
                   className="object-cover rounded-lg shadow-lg"
                   fill
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

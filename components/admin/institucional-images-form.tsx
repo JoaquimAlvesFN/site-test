@@ -124,9 +124,9 @@ export function InstitucionalImagesForm() {
     const heroData: any = {}
       if (heroImages.heroImage) {
         heroData.heroImage = heroImages.heroImage
-        heroData.heroImageAlt = heroImages.heroImageAlt
-        heroData.heroImageCaption = heroImages.heroImageCaption
-        heroData.heroImageLocation = heroImages.heroImageLocation
+        // heroData.heroImageAlt = heroImages.heroImageAlt
+        // heroData.heroImageCaption = heroImages.heroImageCaption
+        // heroData.heroImageLocation = heroImages.heroImageLocation
       }
       console.log(heroData, 'heroData')
 
@@ -153,10 +153,12 @@ export function InstitucionalImagesForm() {
       // }
 
       // Update company info for hero section if values exist
+
+      console.log(heroData, 'heroData SEND DEBUG')
       
-      if (Object.keys(heroData).length > 0) {
+      // if (Object.keys(heroData).length > 0) {
         await updateCompanyInfo(heroData)
-      }
+      // }
 
       // Save about section images to settings if they exist
       // if (hasAboutImages) {
@@ -206,8 +208,8 @@ export function InstitucionalImagesForm() {
       <Tabs defaultValue="hero" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-8">
           <TabsTrigger value="hero">Imagem Principal</TabsTrigger>
-          <TabsTrigger value="about">Seção Sobre</TabsTrigger>
-          <TabsTrigger value="facilities">Instalações</TabsTrigger>
+          {/* <TabsTrigger value="about">Seção Sobre</TabsTrigger> */}
+          {/* <TabsTrigger value="facilities">Instalações</TabsTrigger> */}
         </TabsList>
 
         <TabsContent value="hero" className="space-y-4">
@@ -220,6 +222,59 @@ export function InstitucionalImagesForm() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <Label>Imagem 1</Label>
+              <ImageSelector 
+                value={aboutImages.image1} 
+                onChange={(value) => handleAboutChange("image1", value)} 
+              />
+              {/* <div className="mt-2">
+                <Label htmlFor="image1Alt">Texto Alternativo</Label>
+                <Input
+                  id="image1Alt"
+                  value={aboutImages.image1Alt}
+                  onChange={(e) => handleAboutChange("image1Alt", e.target.value)}
+                  required
+                />
+              </div> */}
+            </div>
+
+            <div>
+              <Label>Imagem 2</Label>
+              <ImageSelector 
+                value={aboutImages.image2} 
+                onChange={(value) => handleAboutChange("image2", value)} 
+              />
+              {/* <div className="mt-2">
+                <Label htmlFor="image2Alt">Texto Alternativo</Label>
+                <Input
+                  id="image2Alt"
+                  value={aboutImages.image2Alt}
+                  onChange={(e) => handleAboutChange("image2Alt", e.target.value)}
+                  required
+                />
+              </div> */}
+            </div>
+
+            <div>
+              <Label>Imagem 3</Label>
+              <ImageSelector 
+                value={aboutImages.image3} 
+                onChange={(value) => handleAboutChange("image3", value)} 
+              />
+              {/* <div className="mt-2">
+                <Label htmlFor="image3Alt">Texto Alternativo</Label>
+                <Input
+                  id="image3Alt"
+                  value={aboutImages.image3Alt}
+                  onChange={(e) => handleAboutChange("image3Alt", e.target.value)}
+                  required
+                />
+              </div> */}
+            </div>
+          </div>
+
+          {/* <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label htmlFor="heroImageAlt">Texto Alternativo</Label>
               <Input
@@ -249,10 +304,10 @@ export function InstitucionalImagesForm() {
                 required
               />
             </div>
-          </div>
+          </div> */}
         </TabsContent>
 
-        <TabsContent value="about" className="space-y-4">
+        {/* <TabsContent value="about" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div>
               <Label>Imagem 1</Label>
@@ -305,9 +360,9 @@ export function InstitucionalImagesForm() {
               </div>
             </div>
           </div>
-        </TabsContent>
+        </TabsContent> */}
 
-        <TabsContent value="facilities" className="space-y-6">
+        {/* <TabsContent value="facilities" className="space-y-6">
           {facilitiesImages.map((facility) => (
             <div key={facility.id} className="border p-4 rounded-lg space-y-4">
               <h3 className="font-medium">Instalação {facility.id}</h3>
@@ -353,7 +408,7 @@ export function InstitucionalImagesForm() {
               </div>
             </div>
           ))}
-        </TabsContent>
+        </TabsContent> */}
       </Tabs>
 
       <div className="flex justify-end">

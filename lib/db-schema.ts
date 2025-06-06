@@ -23,6 +23,7 @@ export const heroSlides = sqliteTable("hero_slides", {
   price: text("price").notNull(),
   cta: text("cta").notNull(),
   image: text("image").notNull(),
+  mobileImage: text("mobile_image"),
   features: text("features", { mode: "json" }).notNull().$type<string[]>(),
   tag: text("tag"),
   speedBadge: text("speed_badge"),

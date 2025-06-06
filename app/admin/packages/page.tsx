@@ -120,7 +120,7 @@ export default async function PackagesPage() {
           </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Pacotes Pré-Pago</CardTitle>
           </CardHeader>
@@ -159,7 +159,7 @@ export default async function PackagesPage() {
               </table>
             </div>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   )

@@ -63,7 +63,7 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
     <Card className="mb-6">
       <CardContent className="pt-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="name-filter">Nome</Label>
             <Input
               id="name-filter"
@@ -81,7 +81,7 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
               value={filters.email}
               onChange={(e) => handleChange("email", e.target.value)}
             />
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <Label htmlFor="phone-filter">Telefone</Label>
@@ -93,7 +93,7 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
             />
           </div>
 
-          <div className="space-y-2">
+          {/* <div className="space-y-2">
             <Label htmlFor="cpf-filter">CPF</Label>
             <Input
               id="cpf-filter"
@@ -111,7 +111,7 @@ export function ContactFilters({ onFilterChange, defaultStatus = "pending" }: Co
               value={filters.cnpj}
               onChange={(e) => handleChange("cnpj", e.target.value)}
             />
-          </div>
+          </div> */}
 
           <div className="space-y-2">
             <Label htmlFor="status-filter">Status</Label>

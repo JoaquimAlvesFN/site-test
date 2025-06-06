@@ -64,7 +64,7 @@ export default function ContactsPage() {
             .filter(contact => contact !== null && contact !== undefined)
             .map(contact => ({
               ...contact,
-              type: contact.quantidade_pontos && contact.quantidade_pontos > 0 ? ('individual' as const) : ('company' as const)
+              type: contact.quantidade_pontos && contact.quantidade_pontos > 0 ? ('company' as const) : ('individual' as const)
             }))
         : [];
       
@@ -320,17 +320,17 @@ export default function ContactsPage() {
               <table className="w-full border-collapse">
                 <thead>
                   <tr className="border-b">
-                    <th className="text-left py-3 px-4">Nome/Razão Social</th>
+                    {/* <th className="text-left py-3 px-4">Nome/Razão Social</th> */}
                     <th className="text-left py-3 px-4">Tipo</th>
                     {filteredContacts.some(contact => contact.type === 'company' ? contact.cnpj : contact.cpf) && (
-                      <th className="text-left py-3 px-4">CPF/CNPJ</th>
+                      <th className="text-left py-3 px-4">Contato</th>
                     )}
-                    {filteredContacts.some(contact => contact.phone) && (
+                    {/* {filteredContacts.some(contact => contact.phone) && (
                       <th className="text-left py-3 px-4">Telefone</th>
-                    )}
-                    {filteredContacts.some(contact => contact.email || (contact.type === 'company' && contact.email_faturamento)) && (
+                    )} */}
+                    {/* {filteredContacts.some(contact => contact.email || (contact.type === 'company' && contact.email_faturamento)) && (
                       <th className="text-left py-3 px-4">E-mail</th>
-                    )}
+                    )} */}
                     <th className="text-left py-3 px-4">Data</th>
                     <th className="text-left py-3 px-4">Status</th>
                     <th className="text-right py-3 px-4">Ações</th>
@@ -339,27 +339,27 @@ export default function ContactsPage() {
                 <tbody>
                   {filteredContacts.map((contact) => (
                     <tr key={contact.id} className="border-b hover:bg-slate-50">
-                      <td className="py-3 px-4">
+                      {/* <td className="py-3 px-4">
                         {contact.type === 'company' ? contact.razao_social : contact.name}
-                      </td>
+                      </td> */}
                       <td className="py-3 px-4">
                         {contact.type === 'company' ? 'Pessoa Jurídica' : 'Pessoa Física'}
                       </td>
                       {/* {filteredContacts.some(c => c.type === 'company' ? c.cnpj : c.cpf) && ( */}
                       <td className="py-3 px-4">
-                        {contact.type === 'company' ? contact.cnpj : contact.cpf}
+                        {contact.type === 'company' ? contact.phone : contact.telefone}
                       </td>
                       {/* )} */}
                       {filteredContacts.some(c => c.phone) && (
                         <td className="py-3 px-4">{contact.phone || "-"}</td>
                       )}
-                      {filteredContacts.some(c => c.email || (c.type === 'company' && c.email_faturamento)) && (
+                      {/* {filteredContacts.some(c => c.email || (c.type === 'company' && c.email_faturamento)) && (
                         <td className="py-3 px-4">
                           {contact.type === 'company' 
                             ? contact.email_faturamento
                             : contact.email}
                         </td>
-                      )}
+                      )} */}
                       <td className="py-3 px-4">
                         {(() => {
                           try {

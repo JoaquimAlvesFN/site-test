@@ -51,25 +51,25 @@ export default async function SettingsPage() {
               settings={settingsData}
               section="contact"
               fields={[
-                { key: "phone_sales", label: "Telefone de Vendas", placeholder: "0800 600 4990" },
-                { key: "phone_support", label: "Telefone de Suporte", placeholder: "0800 720 1234" },
+                // { key: "phone_sales", label: "Telefone de Vendas", placeholder: "0800 600 4990" },
+                // { key: "phone_support", label: "Telefone de Suporte", placeholder: "0800 720 1234" },
                 { key: "whatsapp", label: "WhatsApp (com código do país)", placeholder: "5511999999999" },
-                { key: "email", label: "E-mail de Contato", placeholder: "contato@skypacotes.com.br" },
+                // { key: "email", label: "E-mail de Contato", placeholder: "contato@skypacotes.com.br" },
               ]}
             />
           </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Logos</CardTitle>
           </CardHeader>
           <CardContent>
             <LogoSettingsForm settings={settings} />
           </CardContent>
-        </Card>
+        </Card> */}
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Banner Promocional</CardTitle>
           </CardHeader>
@@ -88,9 +88,9 @@ export default async function SettingsPage() {
               ]}
             />
           </CardContent>
-        </Card>
+        </Card> */}
 
-        <Card>
+        {/* <Card>
           <CardHeader>
             <CardTitle>Redes Sociais</CardTitle>
           </CardHeader>
@@ -106,7 +106,7 @@ export default async function SettingsPage() {
               ]}
             />
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
     </div>
   )

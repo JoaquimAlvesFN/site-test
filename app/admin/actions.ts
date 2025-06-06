@@ -597,14 +597,6 @@ export async function getCompanyInfo() {
 
 // Função para atualizar as informações da empresa
 export async function updateCompanyInfo(data: any) {
-  console.log(data, 'data update company info')
-  // try {
-    // Validar os dados recebidos
-    // if (!data) {
-    //   throw new Error("Dados inválidos")
-    // }
-
-    // Preparar os dados para salvar
     const companyData = {
       aboutTitle: data.aboutTitle || "",
       aboutDescription: data.aboutDescription || "",
@@ -614,43 +606,34 @@ export async function updateCompanyInfo(data: any) {
       channelsCount: data.channelsCount || "",
       coveragePercent: data.coveragePercent || "",
       heroImage: data.heroImage,
-      heroImageAlt: data.heroImageAlt,
-      heroImageCaption: data.heroImageCaption,
-      heroImageLocation: data.heroImageLocation,
+      heroImageAlt: data.heroImageAlt || "",
+      heroImageCaption: data.heroImageCaption || "",
+      heroImageLocation: data.heroImageLocation || "",
       updatedAt: new Date()
     }
 
-    console.log(companyData, 'companyData')
-
     // Buscar registro existente
     const existingInfo = await db.companyInfo.findFirst()
-
     try {
+      if (existingInfo) {
+        // Criar novo registro
+        const result = await db.companyInfo.upsert({
+          create: {
+            ...companyData,
+            updatedAt: new Date()
+          },
+          update: {
+            ...companyData,
+            updatedAt: new Date()
+          }
+        })
 
-    if (!existingInfo) {
-      // Criar novo registro
-      const result = await db.companyInfo.create({
-        data: companyData
-      })
-      
-      if (!result) {
-        throw new Error("Erro ao criar registro")
-      }
-    } else {
-      // Atualizar registro existente
-      const result = await db.companyInfo.update({
-        where: { id: existingInfo.id },
-        data: companyData
-      })
-
-      if (!result) {
-        throw new Error("Erro ao atualizar registro") 
-      }
-    }
-
-    // Revalidar páginas
-    revalidatePath("/admin/institucional")
-    revalidatePath("/institucional")
+        console.log(result, 'result')
+        
+        if (!result) {
+          throw new Error("Erro ao criar registro")
+        }
+      } 
 
     return { success: true }
 
@@ -1961,6 +1944,31 @@ export async function getActiveHeroSlidesFromDb() {
   } catch (error) {
     console.error("Erro ao buscar slides do hero:", error)
     return []
+  }
+}
+
+// Function to get storage usage information
+export async function getStorageUsage() {
+  try {
+    const images = await db.image.findMany();
+    const totalSize = images.reduce((acc, img) => acc + img.size, 0);
+    const maxSize = 100 * 1024 * 1024; // 100MB limit
+    const usagePercentage = (totalSize / maxSize) * 100;
+
+    return {
+      totalSize,
+      maxSize,
+      usagePercentage,
+      imageCount: images.length
+    };
+  } catch (error) {
+    console.error("Erro ao calcular uso de armazenamento:", error);
+    return {
+      totalSize: 0,
+      maxSize: 100 * 1024 * 1024,
+      usagePercentage: 0,
+      imageCount: 0
+    };
   }
 }
 

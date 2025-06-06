@@ -545,6 +545,7 @@ class MockDatabase {
         price: "1,90",
         cta: "Assine já",
         image: "/placeholder.svg?height=600&width=800",
+        mobileImage: "/placeholder.svg?height=300&width=400",
         features: ["Mais de 200 canais", "Esportes ao vivo", "Filmes e séries"],
         tag: "OFERTA LIMITADA",
         order: 1,
@@ -559,6 +560,7 @@ class MockDatabase {
         price: "149,90",
         cta: "Conheça os combos",
         image: "/placeholder.svg?height=600&width=800",
+        mobileImage: "/placeholder.svg?height=300&width=400",
         features: ["Internet de alta velocidade", "TV com os melhores canais", "Instalação grátis"],
         tag: "COMBO EXCLUSIVO",
         speedBadge: "300 Mega",
@@ -574,6 +576,7 @@ class MockDatabase {
         price: "69,90",
         cta: "Saiba mais",
         image: "/placeholder.svg?height=600&width=800",
+        mobileImage: "/placeholder.svg?height=300&width=400",
         features: ["Sem análise de crédito", "Recarregue quando quiser", "Mais de 80 canais"],
         tag: "SEM MENSALIDADE",
         order: 3,
@@ -807,6 +810,7 @@ export type HeroSlide = {
   price: string
   cta: string
   image: string
+  mobileImage?: string
   features: string[]
   tag?: string
   speedBadge?: string
