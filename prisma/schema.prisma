@@ -128,19 +128,19 @@ model Image {
 
 model CompanyInfo {
   id                Int      @id @default(autoincrement())
-  aboutTitle        String
-  aboutDescription  String
+  aboutTitle        String?
+  aboutDescription  String?
   aboutDescription2 String?
-  clientsCount      String
-  employeesCount    String
-  channelsCount     String
-  coveragePercent   String
-  heroTitle         String
-  heroSubtitle      String
+  clientsCount      String?
+  employeesCount    String?
+  channelsCount     String?
+  coveragePercent   String?
+  heroTitle         String?
+  heroSubtitle      String?
   heroImage         String
-  heroImageAlt      String
-  heroImageCaption  String
-  heroImageLocation String
+  heroImageAlt      String?
+  heroImageCaption  String?
+  heroImageLocation String?
   updatedAt         DateTime @updatedAt
 }
 

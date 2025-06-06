@@ -8,6 +8,7 @@ import { PromoBanner } from "@/components/promo-banner"
 import { InstitucionalHeader } from "@/components/institucional/institucional-header"
 import { ValueCard } from "@/components/institucional/value-card"
 import { ContactModal } from "@/components/contact-modal"
+import { ImageGallery } from "@/components/institucional/image-gallery"
 import { getCompanyInfo, getCompanyFacilities, getAllSettings, getCompanyValues, getTeamMembers } from "@/app/admin/actions"
 
 // Definir tipos para os dados
@@ -136,37 +137,7 @@ export default async function InstitucionalPage() {
                   {companyInfo.aboutDescription2 || "Com uma ampla cobertura nacional, a SKY leva entretenimento e conectividade para todas as regiões do Brasil, incluindo áreas remotas onde outras tecnologias não chegam."}
                 </p>
               </div>
-              <div className="order-1 lg:order-2 grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="rounded-lg overflow-hidden">
-                    <Image
-                      src={aboutImages.image1}
-                      alt={aboutImages.image1Alt}
-                      width={300}
-                      height={300}
-                      className="w-full h-auto object-cover"
-                    />
-                  </div>
-                  <div className="rounded-lg overflow-hidden">
-                    <Image
-                      src={aboutImages.image2}
-                      alt={aboutImages.image2Alt}
-                      width={300}
-                      height={300}
-                      className="w-full h-auto object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="rounded-lg overflow-hidden">
-                  <Image
-                    src={aboutImages.image3}
-                    alt={aboutImages.image3Alt}
-                    width={300}
-                    height={620}
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              </div>
+              <ImageGallery images={aboutImages} />
             </div>
           </div>
         </section>

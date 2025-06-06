@@ -122,13 +122,12 @@ export function InstitucionalImagesForm() {
     setIsSubmitting(true)
 
     const heroData: any = {}
-      if (heroImages.heroImage) {
+      // if (heroImages.heroImage) {
         heroData.heroImage = heroImages.heroImage
         // heroData.heroImageAlt = heroImages.heroImageAlt
         // heroData.heroImageCaption = heroImages.heroImageCaption
         // heroData.heroImageLocation = heroImages.heroImageLocation
-      }
-      console.log(heroData, 'heroData')
+      // }
 
     try {
       // Verificar se há imagens anexadas
@@ -154,21 +153,15 @@ export function InstitucionalImagesForm() {
 
       // Update company info for hero section if values exist
 
-      console.log(heroData, 'heroData SEND DEBUG')
       
       // if (Object.keys(heroData).length > 0) {
-        await updateCompanyInfo(heroData)
+      const result = await updateCompanyInfo(heroData)
       // }
 
       // Save about section images to settings if they exist
-      // if (hasAboutImages) {
-      //   if (aboutImages.image1) await updateSetting("aboutImage1", aboutImages.image1)
-      //   if (aboutImages.image1Alt) await updateSetting("aboutImage1Alt", aboutImages.image1Alt)
-      //   if (aboutImages.image2) await updateSetting("aboutImage2", aboutImages.image2) 
-      //   if (aboutImages.image2Alt) await updateSetting("aboutImage2Alt", aboutImages.image2Alt)
-      //   if (aboutImages.image3) await updateSetting("aboutImage3", aboutImages.image3)
-      //   if (aboutImages.image3Alt) await updateSetting("aboutImage3Alt", aboutImages.image3Alt)
-      // }
+      if (aboutImages.image1) await updateSetting("aboutImage1", aboutImages.image1)
+      if (aboutImages.image2) await updateSetting("aboutImage2", aboutImages.image2) 
+      if (aboutImages.image3) await updateSetting("aboutImage3", aboutImages.image3)
 
       // Update each facility if it has data
       // for (const facility of facilitiesImages) {

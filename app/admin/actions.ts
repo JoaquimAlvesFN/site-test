@@ -612,38 +612,42 @@ export async function updateCompanyInfo(data: any) {
       updatedAt: new Date()
     }
 
-    // Buscar registro existente
-    const existingInfo = await db.companyInfo.findFirst()
     try {
+      // Buscar o primeiro registro existente
+      const existingInfo = await db.companyInfo.findFirst()
+
+      // Se existir um registro, usar seu ID para o upsert
       if (existingInfo) {
-        // Criar novo registro
         const result = await db.companyInfo.upsert({
+          where: { id: existingInfo.id },
+          update: companyData,
           create: {
             ...companyData,
-            updatedAt: new Date()
-          },
-          update: {
-            ...companyData,
-            updatedAt: new Date()
+            heroTitle: "",
+            heroSubtitle: ""
           }
         })
-
-        console.log(result, 'result')
         
-        if (!result) {
-          throw new Error("Erro ao criar registro")
-        }
-      } 
-
-    return { success: true }
-
-  } catch (error) {
-    console.error("Erro ao atualizar informações da empresa:", error)
-    return { 
-      success: false,
-      error: error instanceof Error ? error.message : "Erro desconhecido"
+        return { success: true, result: result }
+      } else {
+        // Se não existir nenhum registro, criar um novo
+        const result = await db.companyInfo.create({
+          data: {
+            ...companyData,
+            heroTitle: "",
+            heroSubtitle: ""
+          }
+        })
+        
+        return { success: true, result: result }
+      }
+    } catch (error) {
+      console.error("Erro ao atualizar informações da empresa:", error instanceof Error ? error.message : "Erro desconhecido")
+      return { 
+        success: false,
+        error: error instanceof Error ? error.message : "Erro desconhecido"
+      }
     }
-  }
 }
 
 // Função para obter os valores da empresa

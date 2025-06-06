@@ -189,7 +189,7 @@ export default function ContactsPage() {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Solicitações de Contato</h1>
+        <h1 className="text-3xl font-bold">CRM</h1>
         <p>Carregando dados, aguarde por favor...</p>
       </div>
     );
@@ -199,7 +199,7 @@ export default function ContactsPage() {
   if (error) {
     return (
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold">Solicitações de Contato</h1>
+        <h1 className="text-3xl font-bold">CRM</h1>
         <p className="text-red-500">{error}</p>
         <button 
           onClick={fetchData}
@@ -216,7 +216,7 @@ export default function ContactsPage() {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Solicitações de Contato</h1>
+          <h1 className="text-3xl font-bold">CRM</h1>
           <p className="text-muted-foreground">Gerencie as solicitações de contato recebidas pelo site</p>
         </div>
         
@@ -259,7 +259,7 @@ export default function ContactsPage() {
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row md:justify-between md:items-center">
         <div>
-          <h1 className="text-3xl font-bold">Solicitações de Contato</h1>
+          <h1 className="text-3xl font-bold">CRM</h1>
           <p className="text-muted-foreground">Gerencie as solicitações de contato recebidas pelo site</p>
         </div>
         
