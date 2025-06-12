@@ -30,7 +30,29 @@ export const metadata: Metadata = {
     description: 'Assine SKY com a Ligcel: TV por assinatura com os melhores pacotes, canais em HD, filmes e séries. Revendedor autorizado com preços especiais e atendimento personalizado.',
     type: 'website',
     locale: 'pt_BR',
-  }
+  },
+  icons: {
+    icon: '/favicon.ico',
+    apple: '/apple-touch-icon.png',
+    other: [
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '32x32',
+        url: '/favicon-32x32.png',
+      },
+      {
+        rel: 'icon',
+        type: 'image/png',
+        sizes: '16x16',
+        url: '/favicon-16x16.png',
+      },
+      {
+        rel: 'manifest',
+        url: '/manifest.webmanifest',
+      }
+    ],
+  },
 }
 
 export default function RootLayout({
