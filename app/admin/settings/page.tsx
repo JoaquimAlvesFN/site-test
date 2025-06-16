@@ -13,8 +13,8 @@ export default async function SettingsPage() {
   // Mesclar com valores padrão para garantir que todos os campos existam
   const settings = {
     // Contato
-    phone_sales: settingsData.phone_sales || "0800 600 4990",
-    phone_support: settingsData.phone_support || "0800 720 1234",
+    phone_sales: settingsData.phone_sales,
+    phone_support: settingsData.phone_support,
     whatsapp: settingsData.whatsapp || "5511999999999",
     email: settingsData.email || "contato@skypacotes.com.br",
     
@@ -51,8 +51,8 @@ export default async function SettingsPage() {
               settings={settingsData}
               section="contact"
               fields={[
-                // { key: "phone_sales", label: "Telefone de Vendas", placeholder: "0800 600 4990" },
-                // { key: "phone_support", label: "Telefone de Suporte", placeholder: "0800 720 1234" },
+                { key: "phone_sales", label: "Telefone de Vendas", placeholder: "0800 600 4990" },
+                { key: "phone_support", label: "Telefone de Suporte", placeholder: "0800 720 1234" },
                 { key: "whatsapp", label: "WhatsApp (com código do país)", placeholder: "5511999999999" },
                 // { key: "email", label: "E-mail de Contato", placeholder: "contato@skypacotes.com.br" },
               ]}

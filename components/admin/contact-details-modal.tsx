@@ -57,7 +57,7 @@ export function ContactDetailsModal({ contact }: ContactDetailsModalProps) {
             <h3 className="font-semibold">Informações Básicas</h3>
             <div>
               <p className="text-sm text-muted-foreground">Nome/Razão Social</p>
-              <p>{contact.name}</p>
+              <p>{contact.type === 'company' ? contact.cnpj : contact.name}</p>
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Tipo</p>

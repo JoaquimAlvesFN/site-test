@@ -31,6 +31,8 @@ interface FooterSettings {
     supportPhone: string
     whatsapp: string
   }
+  phone_sales: string
+  phone_support: string
   copyright: string
 }
 
@@ -66,6 +68,8 @@ export function Footer() {
       supportPhone: "0800 720 1234",
       whatsapp: "5511999999999",
     },
+    phone_sales: "0800 600 4990",
+    phone_support: "0800 720 1234",
     copyright: "© {year} SKY Brasil. Todos os direitos reservados.",
   })
 
@@ -88,6 +92,8 @@ export function Footer() {
             supportPhone: data.footer_contact_support_phone || settings.contact.supportPhone,
             whatsapp: data.footer_contact_whatsapp || settings.contact.whatsapp,
           },
+          phone_sales: data.phone_sales || settings.phone_sales,
+          phone_support: data.phone_support || settings.phone_support,
           copyright: data.footer_copyright || settings.copyright,
         }
 
@@ -119,22 +125,22 @@ export function Footer() {
           <div>
             <h3 className="font-bold text-lg mb-4">{settings.contact.title}</h3>
             <ul className="space-y-2">
-              {/* <li className="flex items-center gap-2">
+              <li className="flex items-center gap-2">
                 <span className="text-sm text-black">{settings.contact.salesLabel}</span>
                 <Link
                   href={`tel:${settings.contact.salesPhone.replace(/\D/g, "")}`}
                   className="text-sm text-black font-bold"
                 >
-                  {settings.contact.salesPhone}
+                  {settings.phone_sales}
                 </Link>
-              </li> */}
+              </li>
               <li className="flex items-center gap-2">
                 <span className="text-sm text-black">{settings.contact.supportLabel}</span>
                 <Link
                   href={`tel:08007252880`}
                   className="text-sm text-black font-bold"
                 >
-                   0800 725 2880
+                   {settings.phone_support}
                 </Link>
               </li>
             </ul>
